@@ -13,7 +13,7 @@ export default defineWorkersConfig({
         singleWorker: true,
         miniflare: {
           compatibilityDate: '2024-10-01',
-          compatibilityFlags: ['nodejs_compat_v2'],
+          compatibilityFlags: ['nodejs_compat'],
           bindings: {
             VERSION: '0.1.0-test',
             ALLOWED_ORIGINS: 'http://localhost:5173',
