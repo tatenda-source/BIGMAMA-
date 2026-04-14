@@ -1,0 +1,32 @@
+{
+  "name": "BIGMAMA$ — Civic Reporting",
+  "short_name": "BIGMAMA$",
+  "description": "Civic engagement and land-rights reporting platform. Report illegal land deals, organize campaigns, protect communities.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "categories": ["social", "news", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Report",
+      "short_name": "Report",
+      "description": "File a new incident report",
+      "url": "/?action=report",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}
