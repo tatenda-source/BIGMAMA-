@@ -88,21 +88,6 @@ h1, h2, h3, h4, .font-display {
   animation: fadeIn 0.8s ease forwards;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-dark);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--glass-border);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-dim);
-}
-
 #root {
   width: 1126px;
   max-width: 100%;
