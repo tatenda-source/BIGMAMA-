@@ -25,7 +25,13 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+      // JSX-referenced identifiers (e.g. `motion`, `Icon` prop) look unused to
+      // the vanilla rule; the broader pattern keeps those usable without
+      // pulling in eslint-plugin-react for one rule.
+      'no-unused-vars': ['error', {
+        varsIgnorePattern: '^[A-Z_]|^motion$|^(React|clsx)$',
+        argsIgnorePattern: '^_|^[A-Z]',
+      }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-alert': 'error',
       'no-eval': 'error',
