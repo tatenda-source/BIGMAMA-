@@ -122,6 +122,22 @@ html, body, #root {
 }
 .bm-icon-button:hover { color: var(--color-text); }
 
+.bm-dropzone {
+  height: 120px;
+  border: 2px dashed var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: var(--color-surface-glass);
+  transition: border-color var(--transition-speed), background var(--transition-speed);
+}
+.bm-dropzone:hover,
+.bm-dropzone[data-hover='true'],
+.bm-dropzone:focus-visible {
+  border-color: var(--color-accent-cyan);
+}
+
 /* Visually hidden but screen-reader available. */
 .sr-only {
   position: absolute;
