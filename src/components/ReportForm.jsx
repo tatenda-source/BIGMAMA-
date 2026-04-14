@@ -17,6 +17,7 @@ import MediaDropzone from './MediaDropzone';
 import ActionButton from './ActionButton';
 import { encryptData, sanitizeInput, generateCaseId } from '../utils/security';
 import { validateReport } from '../utils/validation';
+import { PLATFORM_NAME } from '../utils/constants';
 
 const ReportForm = ({ onClose }) => {
   const [step, setStep] = useState(1);
