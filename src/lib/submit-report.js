@@ -115,22 +115,17 @@ export async function submitReport(payload, opts) {
 }
 
 async function postOnce({ fetchImpl, endpoint, payload, idempotencyKey, abortSignal }) {
-  let res;
-  try {
-    res = await fetchImpl(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Idempotency-Key': idempotencyKey,
-      },
-      body: JSON.stringify(payload),
-      signal: abortSignal,
-    });
-  } catch (err) {
-    // Network failure — rethrow as-is so withRetry's default predicate
-    // treats TypeError as retryable.
-    throw err;
-  }
+  // Network failure rethrows as-is so withRetry's default predicate can treat
+  // TypeError as retryable — no try/catch wrapper needed here.
+  const res = await fetchImpl(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Idempotency-Key': idempotencyKey,
+    },
+    body: JSON.stringify(payload),
+    signal: abortSignal,
+  });
 
   if (!res.ok) {
     const err = new Error(`HTTP ${res.status}`);
