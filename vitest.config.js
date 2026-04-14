@@ -8,8 +8,12 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./tests/setup.js'],
     css: false,
-    include: ['tests/unit/**/*.test.{js,jsx}', 'src/**/*.test.{js,jsx}'],
-    exclude: ['tests/chaos/**', 'node_modules/**', 'dist/**'],
+    include: [
+      'tests/unit/**/*.test.{js,jsx}',
+      'tests/integration/**/*.test.{js,jsx}',
+      'src/**/*.test.{js,jsx}',
+    ],
+    exclude: ['tests/chaos/**', 'node_modules/**', 'dist/**', 'server/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
