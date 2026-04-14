@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import ActionButton from './components/ActionButton';
 import Card from './components/Card';
 import FeedItem from './components/FeedItem';
 import HotspotMap from './components/HotspotMap';
@@ -91,6 +92,13 @@ const App = () => {
                 <div className="glass-card" style={{ padding: '32px' }}>
                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                       <h3 className="font-display">Live Incident Feed</h3>
+                      <ActionButton 
+                        style={{ padding: '12px 24px', fontSize: '15px' }}
+                        onClick={() => setShowReportModal(true)}
+                        icon={AlertTriangle}
+                      >
+                        Report Incident
+                      </ActionButton>
                       <button 
                         onClick={() => setActiveTab('map')}
                         style={{ background: 'transparent', border: 'none', color: '#00f2ff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
