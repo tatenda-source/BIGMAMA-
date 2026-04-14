@@ -1,0 +1,89 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ['**']
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday 06:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  npm-audit:
+    name: npm audit (high+)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+
+  codeql:
+    name: CodeQL (javascript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        with:
+          languages: javascript
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        with:
+          category: '/language:javascript'
+
+  gitleaks:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@44c470ffc35a9578ab846c136ed6a09bc27b4ca2 # v2.3.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: true
+          GITLEAKS_ENABLE_SUMMARY: true
+
+      - name: Upload gitleaks SARIF
+        if: always() && hashFiles('results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@012739e5082ff0c22ca6d6ab32e07c36df03c4a4 # v3.22.12
+        with:
+          sarif_file: results.sarif
+          category: gitleaks
