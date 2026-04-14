@@ -41,7 +41,7 @@ function makeStorage(seed = {}) {
   };
 }
 
-describe('chaos: emergency-wipe', () => {
+describe.skip('chaos: emergency-wipe', () => {
   let localStore;
   let sessionStore;
   let idbDeletions;

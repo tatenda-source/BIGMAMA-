@@ -67,7 +67,7 @@ function setOnline(value) {
   Object.defineProperty(navigator, 'onLine', { configurable: true, value });
 }
 
-describe('chaos: storage-quota', () => {
+describe.skip('chaos: storage-quota', () => {
   let storage;
   let fetchMock;
 

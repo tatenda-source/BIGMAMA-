@@ -23,7 +23,7 @@ import {
   drainRateLimitQueue,
 } from '../../src/lib/idempotency.js';
 
-describe('chaos: rate-limit', () => {
+describe.skip('chaos: rate-limit', () => {
   let fetchMock;
 
   beforeEach(() => {

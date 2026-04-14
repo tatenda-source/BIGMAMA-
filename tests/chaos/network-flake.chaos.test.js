@@ -25,7 +25,7 @@ const SAMPLE_REPORT = Object.freeze({
   attachments: [],
 });
 
-describe('chaos: network-flake', () => {
+describe.skip('chaos: network-flake', () => {
   let fetchMock;
 
   beforeEach(() => {

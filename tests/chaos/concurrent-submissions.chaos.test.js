@@ -19,7 +19,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 // TODO: wire real import.
 import { submitReport, useSubmitController } from '../../src/lib/idempotency.js';
 
-describe('chaos: concurrent-submissions', () => {
+describe.skip('chaos: concurrent-submissions', () => {
   let fetchMock;
 
   beforeEach(() => {

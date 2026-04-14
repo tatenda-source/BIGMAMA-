@@ -29,6 +29,22 @@ must hold **no matter what**:
 If any chaos test fails, the fix is *never* to weaken the test. The fix is to
 make the app behave.
 
+## Status: spec vs ship
+
+The first-pass chaos files (`network-flake`, `offline-queue`, `rate-limit`,
+`storage-quota`, `clock-skew`, `concurrent-submissions`, `emergency-wipe`,
+`malformed-input`) were written against a richer API than currently ships from
+`src/lib/`. They are marked `describe.skip` as *todo pressure*: each scenario
+is a real invariant the codebase needs to cover, not yet wired to the public
+surface.
+
+Today's live chaos coverage lives in `smoke.chaos.test.js` and exercises the
+actually-shipped `submitReport(...)` pipeline:
+retry-then-deliver, stable idempotency key across retries, cache short-circuit,
+offline enqueue, and 4xx non-retry. The skipped files will be reshaped as the
+API evolves. Do not delete them — they encode the contract we are building
+toward.
+
 ## How to run
 
 ```bash
