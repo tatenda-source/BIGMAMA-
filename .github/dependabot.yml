@@ -1,0 +1,59 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: chore(deps)
+      include: scope
+    labels:
+      - dependencies
+      - npm
+    groups:
+      motion-and-icons:
+        patterns:
+          - 'framer-motion'
+          - 'lucide*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
+      eslint:
+        patterns:
+          - 'eslint'
+          - 'eslint-*'
+          - '@eslint/*'
+      vite:
+        patterns:
+          - 'vite'
+          - '@vitejs/*'
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: ci(deps)
+      include: scope
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      actions-core:
+        patterns:
+          - 'actions/*'
+      security-actions:
+        patterns:
+          - 'github/codeql-action'
+          - 'gitleaks/*'

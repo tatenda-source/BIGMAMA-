@@ -1,0 +1,12 @@
+# BIGMAMA$ code ownership
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+*                           @tatenda-source
+
+# Security-critical paths — require review by security owner
+src/utils/security.js       @tatenda-source
+src/lib/crypto.js           @tatenda-source
+
+# CI/CD & repo automation
+.github/**                  @tatenda-source

@@ -1,0 +1,123 @@
+#:schema node_modules/wrangler/config-schema.json
+# BIGMAMA$ edge backend — Cloudflare Worker
+#
+# Local dev:   wrangler dev
+# Deploy:      wrangler deploy --env production
+#
+# Secrets (never commit, put with `wrangler secret put <NAME> --env <env>`):
+#   SERVER_SECRET     # 32 bytes random hex; used to HMAC caseId
+#   RATE_LIMIT_SALT   # rotating salt for IP hashing
+
+name = "bigmama-api"
+main = "src/index.js"
+compatibility_date = "2024-10-01"
+compatibility_flags = ["nodejs_compat_v2"]
+workers_dev = false
+
+# --------------------------------------------------------------------------
+# Non-secret defaults. Override per-env under [env.<name>.vars].
+# --------------------------------------------------------------------------
+[vars]
+VERSION = "0.1.0"
+ALLOWED_ORIGINS = "http://localhost:5173"
+MAX_BODY_BYTES = "262144"           # 256 KB
+WRITE_RPM_PER_IP = "10"
+READ_RPM_PER_IP  = "60"
+IDEMPOTENCY_TTL_SECONDS = "604800"  # 7 days
+
+# --------------------------------------------------------------------------
+# KV: idempotency-key ledger + rate-limit counters
+# TODO: run `wrangler kv:namespace create IDEMPOTENCY` and paste the id below
+# TODO: run `wrangler kv:namespace create RATE_LIMIT`  and paste the id below
+# --------------------------------------------------------------------------
+[[kv_namespaces]]
+binding = "IDEMPOTENCY"
+id = "REPLACE_ME_IDEMPOTENCY_KV_ID"
+preview_id = "REPLACE_ME_IDEMPOTENCY_KV_PREVIEW_ID"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "REPLACE_ME_RATE_LIMIT_KV_ID"
+preview_id = "REPLACE_ME_RATE_LIMIT_KV_PREVIEW_ID"
+
+# --------------------------------------------------------------------------
+# D1: durable ciphertext storage
+# TODO: run `wrangler d1 create bigmama-reports` and paste database_id below
+# TODO: run `wrangler d1 migrations apply bigmama-reports --remote`
+# --------------------------------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "bigmama-reports"
+database_id = "REPLACE_ME_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+# ==========================================================================
+# Production
+# ==========================================================================
+[env.production]
+name = "bigmama-api-production"
+
+[env.production.vars]
+VERSION = "0.1.0"
+ALLOWED_ORIGINS = "https://bigmama.pages.dev,https://bigmama.app"
+MAX_BODY_BYTES = "262144"
+WRITE_RPM_PER_IP = "10"
+READ_RPM_PER_IP  = "60"
+IDEMPOTENCY_TTL_SECONDS = "604800"
+
+[[env.production.kv_namespaces]]
+binding = "IDEMPOTENCY"
+id = "REPLACE_ME_PROD_IDEMPOTENCY_KV_ID"
+
+[[env.production.kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "REPLACE_ME_PROD_RATE_LIMIT_KV_ID"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "bigmama-reports"
+database_id = "REPLACE_ME_PROD_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+# secrets for env.production — put with:
+#   wrangler secret put SERVER_SECRET   --env production
+#   wrangler secret put RATE_LIMIT_SALT --env production
+
+# ==========================================================================
+# Staging
+# ==========================================================================
+[env.staging]
+name = "bigmama-api-staging"
+
+[env.staging.vars]
+VERSION = "0.1.0"
+ALLOWED_ORIGINS = "https://staging.bigmama.pages.dev"
+MAX_BODY_BYTES = "262144"
+WRITE_RPM_PER_IP = "10"
+READ_RPM_PER_IP  = "60"
+IDEMPOTENCY_TTL_SECONDS = "604800"
+
+[[env.staging.kv_namespaces]]
+binding = "IDEMPOTENCY"
+id = "REPLACE_ME_STAGING_IDEMPOTENCY_KV_ID"
+
+[[env.staging.kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "REPLACE_ME_STAGING_RATE_LIMIT_KV_ID"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "bigmama-reports-staging"
+database_id = "REPLACE_ME_STAGING_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+# secrets for env.staging — put with:
+#   wrangler secret put SERVER_SECRET   --env staging
+#   wrangler secret put RATE_LIMIT_SALT --env staging
+
+# --------------------------------------------------------------------------
+# Observability — minimal, no PII
+# --------------------------------------------------------------------------
+[observability]
+enabled = true
+head_sampling_rate = 1

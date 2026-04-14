@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-test-build:
+    name: Lint, Test & Build (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Node.js ${{ matrix.node }}
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck (skip if no tsconfig)
+        run: |
+          if [ -f tsconfig.json ]; then
+            echo "tsconfig.json found — running typecheck"
+            npx tsc --noEmit
+          else
+            echo "No tsconfig.json — skipping typecheck gracefully"
+          fi
+
+      - name: Unit tests
+        run: npm run test -- --run
+
+      - name: Chaos tests
+        run: npm run test:chaos -- --run
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload dist artifact
+        if: matrix.node == '20'
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+      - name: Bundle size check (gzip total <= 300KB)
+        if: matrix.node == '20'
+        run: |
+          set -euo pipefail
+          MAX_BYTES=$((300 * 1024))
+          if [ ! -d dist ]; then
+            echo "dist/ not found"
+            exit 1
+          fi
+          TOTAL=0
+          while IFS= read -r -d '' f; do
+            SIZE=$(gzip -c "$f" | wc -c | tr -d ' ')
+            TOTAL=$((TOTAL + SIZE))
+            printf '  %8d bytes gz  %s\n' "$SIZE" "$f"
+          done < <(find dist -type f \( -name '*.js' -o -name '*.css' -o -name '*.html' -o -name '*.svg' -o -name '*.json' \) -print0)
+          echo "Total gzip size: ${TOTAL} bytes (limit ${MAX_BYTES})"
+          if [ "$TOTAL" -gt "$MAX_BYTES" ]; then
+            echo "::error::Bundle gzip size ${TOTAL} exceeds limit ${MAX_BYTES}"
+            exit 1
+          fi

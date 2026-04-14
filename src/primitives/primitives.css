@@ -1,0 +1,324 @@
+/* primitives.css
+ * Shared styles for the BIGMAMA$ primitives library.
+ * All values are tokenized via CSS variables; if the token is not yet defined
+ * in styles/tokens.css the fallback in var(--token, fallback) is used so the
+ * primitives render correctly in isolation.
+ */
+
+/* ---------- CardItem ---------- */
+.bm-card {
+  background: var(--color-surface-glass, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.05));
+  border-radius: var(--radius-md, 16px);
+  color: inherit;
+  box-sizing: border-box;
+  transition: border-color var(--transition-speed, 0.3s) ease,
+    background var(--transition-speed, 0.3s) ease;
+}
+
+.bm-card--pad-sm { padding: 12px; }
+.bm-card--pad-md { padding: 20px; }
+.bm-card--pad-lg { padding: 28px; }
+.bm-card--pad-none { padding: 0; }
+
+.bm-card--interactive { cursor: pointer; }
+.bm-card--interactive:hover {
+  border-color: var(--color-border-hover, rgba(255, 255, 255, 0.12));
+}
+.bm-card--interactive:focus-visible {
+  outline: 2px solid var(--color-accent-cyan, #00f2ff);
+  outline-offset: 2px;
+}
+
+.bm-card--accent {
+  background: color-mix(in srgb, var(--bm-accent) 8%, transparent);
+  border-color: color-mix(in srgb, var(--bm-accent) 25%, transparent);
+}
+
+/* ---------- Toggle ---------- */
+.bm-toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.bm-toggle-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+
+.bm-toggle-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+.bm-toggle-description {
+  font-size: 12px;
+  color: var(--color-text-dim, #a0a0a0);
+  margin: 2px 0 0;
+}
+
+.bm-toggle-switch {
+  --bm-toggle-w: 50px;
+  --bm-toggle-h: 26px;
+  --bm-toggle-knob: 20px;
+  position: relative;
+  width: var(--bm-toggle-w);
+  height: var(--bm-toggle-h);
+  border-radius: calc(var(--bm-toggle-h) / 2);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  transition: background var(--transition-speed, 0.3s) ease;
+  flex-shrink: 0;
+}
+.bm-toggle-switch--sm {
+  --bm-toggle-w: 40px;
+  --bm-toggle-h: 20px;
+  --bm-toggle-knob: 14px;
+}
+.bm-toggle-switch[aria-checked="true"] {
+  background: var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+}
+.bm-toggle-switch:focus-visible {
+  outline: 2px solid var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+  outline-offset: 2px;
+}
+.bm-toggle-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bm-toggle-knob {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+  width: var(--bm-toggle-knob);
+  height: var(--bm-toggle-knob);
+  border-radius: 50%;
+  background: #fff;
+  transition: left var(--transition-speed, 0.3s) ease;
+  pointer-events: none;
+}
+.bm-toggle-switch[aria-checked="true"] .bm-toggle-knob {
+  left: calc(var(--bm-toggle-w) - var(--bm-toggle-knob) - 3px);
+}
+
+/* ---------- StatDisplay ---------- */
+.bm-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.bm-stat__label {
+  font-size: 12px;
+  color: var(--color-text-dim, #a0a0a0);
+  margin: 0;
+  text-transform: none;
+}
+.bm-stat__value-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.bm-stat__value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--bm-accent, inherit);
+}
+.bm-stat__value--sm { font-size: 20px; }
+.bm-stat__value--lg { font-size: 36px; }
+.bm-stat__subtext {
+  font-size: 11px;
+  color: var(--color-text-dim, #a0a0a0);
+  margin: 0;
+}
+.bm-stat__trend {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--bm-accent, var(--color-accent-green, #22e584));
+}
+
+/* ---------- Badge ---------- */
+.bm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  line-height: 1.6;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--bm-accent, var(--color-accent-cyan, #00f2ff)) 15%, transparent);
+  color: var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+}
+.bm-badge--solid {
+  background: var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+  color: #050505;
+}
+.bm-badge--outline {
+  background: transparent;
+  border-color: color-mix(in srgb, var(--bm-accent, var(--color-accent-cyan, #00f2ff)) 45%, transparent);
+}
+
+/* ---------- IconAvatar ---------- */
+.bm-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bm-accent, rgba(255, 255, 255, 0.12)) 12%, transparent);
+  color: var(--bm-accent, var(--color-text-dim, #a0a0a0));
+  border: 1px solid transparent;
+}
+.bm-avatar--ring {
+  border-color: color-mix(in srgb, var(--bm-accent) 30%, transparent);
+}
+.bm-avatar--muted {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-dim, #a0a0a0);
+}
+
+/* ---------- SecondaryButton ---------- */
+.bm-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: var(--radius-md, 10px);
+  background: transparent;
+  color: var(--bm-accent, var(--color-text-dim, #e6e6e6));
+  border: 1px solid
+    color-mix(in srgb, var(--bm-accent, var(--color-border-subtle, rgba(255, 255, 255, 0.12))) 50%, transparent);
+  cursor: pointer;
+  transition: background var(--transition-speed, 0.3s) ease,
+    border-color var(--transition-speed, 0.3s) ease,
+    color var(--transition-speed, 0.3s) ease;
+  font-family: inherit;
+}
+.bm-btn-secondary:hover {
+  background: color-mix(in srgb, var(--bm-accent, #ffffff) 8%, transparent);
+}
+.bm-btn-secondary:focus-visible {
+  outline: 2px solid var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+  outline-offset: 2px;
+}
+.bm-btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bm-btn-secondary--sm { padding: 6px 10px; font-size: 12px; }
+.bm-btn-secondary--lg { padding: 10px 18px; font-size: 14px; }
+
+/* ---------- CardHeader ---------- */
+.bm-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.bm-card-header__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.bm-card-header__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+.bm-card-header__subtitle {
+  font-size: 12px;
+  color: var(--color-text-dim, #a0a0a0);
+  margin: 0;
+}
+.bm-card-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.bm-card-header__action-btn {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+  color: var(--color-text-dim, #a0a0a0);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background var(--transition-speed, 0.3s) ease,
+    color var(--transition-speed, 0.3s) ease;
+}
+.bm-card-header__action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+.bm-card-header__action-btn:focus-visible {
+  outline: 2px solid var(--color-accent-cyan, #00f2ff);
+  outline-offset: 2px;
+}
+
+/* ---------- FormSection ---------- */
+.bm-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.bm-form-section__label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.bm-form-section__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: inherit;
+}
+.bm-form-section__required {
+  color: var(--color-accent-magenta, #ff007a);
+  margin-left: 2px;
+}
+.bm-form-section__hint {
+  font-size: 11px;
+  color: var(--color-text-dim, #a0a0a0);
+  margin: 0;
+}
+.bm-form-section__error {
+  font-size: 12px;
+  color: var(--color-accent-magenta, #ff007a);
+  margin: 0;
+}
+.bm-form-section--error .bm-form-section__label {
+  color: var(--color-accent-magenta, #ff007a);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .bm-card,
+  .bm-toggle-switch,
+  .bm-toggle-knob,
+  .bm-btn-secondary,
+  .bm-card-header__action-btn {
+    transition: none !important;
+  }
+}

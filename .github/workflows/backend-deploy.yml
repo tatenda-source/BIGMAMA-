@@ -1,0 +1,65 @@
+name: backend-deploy
+
+# Deploys the Cloudflare Worker to production after backend-ci is green.
+# Uses workflow_run gating so a broken PR never reaches the edge.
+#
+# Required repo secrets:
+#   CLOUDFLARE_API_TOKEN   # scoped: Workers Scripts:Edit, D1:Edit, KV:Edit
+#   CLOUDFLARE_ACCOUNT_ID
+
+on:
+  workflow_run:
+    workflows: ['backend-ci']
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: backend-deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: wrangler deploy --env production
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Only run when the upstream CI succeeded AND the trigger was a push to main.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    environment:
+      name: production
+      url: https://bigmama-api-production.workers.dev
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      # actions/checkout@v4.2.2
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      # actions/setup-node@v4.1.0
+      - name: Setup Node.js 20
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # cloudflare/wrangler-action@v3.14.1
+      - name: Deploy to Cloudflare (production)
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: server
+          command: deploy --env production
