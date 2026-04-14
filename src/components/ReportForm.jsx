@@ -11,6 +11,8 @@ import {
   Info
 } from 'lucide-react';
 import FormHeader from './FormHeader';
+import FormInput from './FormInput';
+import AnonymityToggle from './AnonymityToggle';
 
 const ReportForm = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -46,34 +48,6 @@ const ReportForm = ({ onClose }) => {
       <FormHeader onClose={onClose} />
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {/* Step 1: Details */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <label style={{ fontSize: '14px', color: '#a0a0a0' }}>Incident Title</label>
-          <input 
-            type="text" 
-            placeholder="e.g. Illegal land clearing at Block B" 
-            required
-            style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px', color: 'white', outline: 'none' }}
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <label style={{ fontSize: '14px', color: '#a0a0a0' }}>Category</label>
-            <select style={{ width: '100%', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px', color: 'white', outline: 'none' }}>
-              <option value="illegal-sale">Illegal Sale</option>
-              <option value="fraudulent-docs">Fraudulent Documents</option>
-              <option value="encroachment">Land Encroachment</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <label style={{ fontSize: '14px', color: '#a0a0a0' }}>Location (GPS)</label>
-            <button type="button" style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', background: '#00f2ff1a', border: '1px solid #00f2ff33', borderRadius: '12px', padding: '12px', color: '#00f2ff', cursor: 'pointer' }}>
-              <MapPin size={18} /> Get Current GPS
-            </button>
-          </div>
-        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <label style={{ fontSize: '14px', color: '#a0a0a0' }}>Description</label>
@@ -95,22 +69,12 @@ const ReportForm = ({ onClose }) => {
 
         {/* Anonymity Toggle */}
         <div style={{ background: 'rgba(0, 242, 255, 0.05)', borderRadius: '16px', padding: '16px', border: '1px solid rgba(0, 242, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: isAnonymous ? '#ff007a1a' : '#00f2ff1a', display: 'grid', placeItems: 'center' }}>
-              {isAnonymous ? <EyeOff size={20} color="#ff007a" /> : <ShieldCheck size={20} color="#00f2ff" />}
-            </div>
-            <div>
-              <p style={{ fontWeight: 600, fontSize: '14px' }}>Report Anonymously</p>
-              <p style={{ fontSize: '12px', color: '#a0a0a0' }}>Hide your identity for safety</p>
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+           <AnonymityToggle 
+             isAnonymous={formData.anonymous} 
+             onToggle={() => setFormData({...formData, anonymous: !formData.anonymous})} 
+           />
           </div>
-          <button 
-            type="button"
-            onClick={() => setIsAnonymous(!isAnonymous)}
-            style={{ width: '50px', height: '26px', background: isAnonymous ? '#ff007a' : 'rgba(255,255,255,0.2)', borderRadius: '13px', border: 'none', position: 'relative', cursor: 'pointer', transition: 'all 0.3s' }}
-          >
-            <div style={{ width: '20px', height: '20px', background: 'white', borderRadius: '50%', position: 'absolute', left: isAnonymous ? '26px' : '4px', top: '3px', transition: 'all 0.3s' }} />
-          </button>
         </div>
 
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
