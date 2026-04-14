@@ -15,6 +15,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  await applyMigrations();
   await env.DB.exec('DELETE FROM reports');
   // Purge KV entries so each test starts fresh.
   // @ts-expect-error: list is available on bindings in miniflare.

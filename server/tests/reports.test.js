@@ -16,7 +16,9 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  // Fresh DB between tests so caseIds don't collide across cases.
+  // applyMigrations is idempotent — ensures the schema exists even when
+  // the pool runs this file before any beforeAll hook has fired.
+  await applyMigrations();
   await env.DB.exec('DELETE FROM reports');
 });
 
