@@ -13,6 +13,7 @@ import {
 import FormHeader from './FormHeader';
 import FormInput from './FormInput';
 import AnonymityToggle from './AnonymityToggle';
+import MediaDropzone from './MediaDropzone';
 
 const ReportForm = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -48,43 +49,73 @@ const ReportForm = ({ onClose }) => {
       <FormHeader onClose={onClose} />
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <label style={{ fontSize: '14px', color: '#a0a0a0' }}>Description</label>
-          <textarea 
-            rows="4" 
-            placeholder="Describe the incident in detail..." 
-            style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px', color: 'white', outline: 'none', resize: 'none' }}
-          />
-        </div>
-
-        {/* Media Upload Simulation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <label style={{ fontSize: '14px', color: '#a0a0a0' }}>Evidence (Photos/Videos)</label>
-          <div style={{ border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '16px', padding: '32px', textAlign: 'center', cursor: 'pointer' }}>
-            <Upload size={32} color="#a0a0a0" style={{ marginBottom: '8px' }} />
-            <p style={{ color: '#a0a0a0', fontSize: '14px' }}>Click to upload or drag files here</p>
-          </div>
-        </div>
-
-        {/* Anonymity Toggle */}
-        <div style={{ background: 'rgba(0, 242, 255, 0.05)', borderRadius: '16px', padding: '16px', border: '1px solid rgba(0, 242, 255, 0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-           <AnonymityToggle 
-             isAnonymous={formData.anonymous} 
-             onToggle={() => setFormData({...formData, anonymous: !formData.anonymous})} 
-           />
+            <FormInput 
+              label="Incident Title" 
+              placeholder="e.g. Illegal land clearing" 
+              value={formData.title}
+              onChange={(e) => setFormData({...formData, title: e.target.value})}
+            />
+            <FormInput 
+              label="Description" 
+              placeholder="Provide as much detail as possible..." 
+              value={formData.description}
+              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              textarea
+            />
+            <button 
+              type="button"
+              className="btn-primary" 
+              style={{ width: '100%', marginTop: '12px' }}
+              onClick={() => setStep(2)}
+            >
+              Next Step: Location & Media
+            </button>
           </div>
-        </div>
+        )}
 
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
-          <Info size={16} color="#a0a0a0" />
-          <p style={{ fontSize: '12px', color: '#a0a0a0' }}>Your data is encrypted and secure. See our Privacy Policy.</p>
-        </div>
+        {step === 2 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+               <label style={{ fontSize: '13px', color: '#a0a0a0' }}>Location (Automatic)</label>
+               <div style={{ display: 'flex', gap: '12px', background: 'rgba(0,242,255,0.05)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(0,242,255,0.1)' }}>
+                  <MapPin size={18} color="#00f2ff" />
+                  <span style={{ fontSize: '13px', color: '#00f2ff' }}>-17.8248, 31.0530 (Verified)</span>
+               </div>
+            </div>
+            
+            <MediaDropzone onUpload={() => {}} />
 
-        <button type="submit" className="btn-primary" style={{ marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', height: '56px', fontSize: '18px' }}>
-           Submit Report <Send size={20} />
-        </button>
+            <AnonymityToggle 
+              isAnonymous={formData.anonymous} 
+              onToggle={() => setFormData({...formData, anonymous: !formData.anonymous})} 
+            />
+
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
+              <Info size={16} color="#a0a0a0" />
+              <p style={{ fontSize: '12px', color: '#a0a0a0' }}>Your data is encrypted and secure.</p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button 
+                type="button"
+                className="btn-secondary" 
+                style={{ flex: 1, padding: '12px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: 'white', border: 'none', cursor: 'pointer' }}
+                onClick={() => setStep(1)}
+              >
+                Back
+              </button>
+              <button 
+                type="submit" 
+                className="btn-primary" 
+                style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+              >
+                Submit Report <Send size={20} />
+              </button>
+            </div>
+          </div>
+        )}
       </form>
     </motion.div>
   );
