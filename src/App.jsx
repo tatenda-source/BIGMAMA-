@@ -16,8 +16,9 @@ import Card from './components/Card';
 import FeedItem from './components/FeedItem';
 import HotspotMap from './components/HotspotMap';
 import ReportForm from './components/ReportForm';
+import AuthorityDashboard from './components/AuthorityDashboard';
 
-function App() {
+const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -162,13 +163,7 @@ function App() {
             )}
 
             {activeTab === 'authority' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                 <div className="glass-card" style={{ padding: '40px', textAlign: 'center' }}>
-                    <h3 className="font-display" style={{ fontSize: '24px', marginBottom: '16px' }}>Authority Dashboard</h3>
-                    <p style={{ color: '#a0a0a0' }}>Access restricted to government officials and certified NGO roles.</p>
-                    <button className="btn-primary" style={{ marginTop: '24px' }}>Request Access</button>
-                 </div>
-              </div>
+              <AuthorityDashboard />
             )}
 
             {!['dashboard', 'map', 'verify', 'authority'].includes(activeTab) && (
