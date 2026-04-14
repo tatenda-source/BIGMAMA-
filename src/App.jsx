@@ -159,7 +159,7 @@ function App() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
                   <Card title="Crisis Alert" subtitle="High intensity hotspot detected" icon={AlertTriangle} color="#ff007a">
-                    <div style={{ background: '#ff007a1a', border: '1px solid #ff00733', padding: '12px', borderRadius: '12px', color: '#ff007a', fontSize: '13px' }}>
+                    <div style={{ background: '#ff007a1a', border: '1px solid #ff007a33', padding: '12px', borderRadius: '12px', color: '#ff007a', fontSize: '13px' }}>
                       Large scale illegal land clearing reported in Harare North Sector.
                     </div>
                   </Card>
@@ -174,18 +174,15 @@ function App() {
                       </div>
                     </div>
                   </Card>
-                  <Card title="System Health" subtitle="Active Monitoring" icon={CheckCircle} color="#7000ff">
-                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                           <span style={{ fontSize: '24px', fontWeight: 700 }}>1,280</span>
-                           <span style={{ fontSize: '12px', color: '#a0a0a0' }}>Active Reports</span>
-                        </div>
-                        <div style={{ height: '30px', width: '1px', background: 'rgba(255,255,255,0.1)' }} />
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
-                           <span style={{ fontSize: '24px', fontWeight: 700 }}>42</span>
-                           <span style={{ fontSize: '12px', color: '#a0a0a0' }}>Hotspots Resolved</span>
-                        </div>
-                     </div>
+                  <Card title="Education Hub" subtitle="Latest guides" icon={FileText} color="#00ffaa">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                       <div style={{ fontSize: '12px', padding: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <CheckCircle color="#00ffaa" size={14} /> Legal Acquisition Process
+                       </div>
+                       <div style={{ fontSize: '12px', padding: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <AlertTriangle color="#ffaa00" size={14} /> Common Land Scams 2026
+                       </div>
+                    </div>
                   </Card>
                 </div>
 
@@ -254,6 +251,29 @@ function App() {
                      <div style={{ display: 'flex', gap: '12px' }}>
                         <input type="text" placeholder="Enter Stand Number / Property ID..." style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px', color: 'white' }} />
                         <button className="btn-primary" style={{ padding: '0 32px' }}>Verify Property</button>
+                     </div>
+                  </div>
+
+                  <div className="glass-card" style={{ padding: '32px' }}>
+                     <h4 className="font-display" style={{ marginBottom: '20px' }}>Recent Search Results</h4>
+                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                        {[
+                          { id: 'ST-2931', status: 'LEGITIMATE', owner: 'State Land', color: '#00ffaa' },
+                          { id: 'ST-1102', status: 'FRAUDULENT', owner: 'Unknown', color: '#ff007a' },
+                          { id: 'ST-4492', status: 'DISPUTED', owner: 'Joint Venture', color: '#ffaa00' }
+                        ].map(res => (
+                          <div key={res.id} style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                                <span style={{ fontSize: '12px', color: '#a0a0a0' }}>ID: {res.id}</span>
+                                <span style={{ fontSize: '10px', fontWeight: 800, color: res.color }}>{res.status}</span>
+                             </div>
+                             <p style={{ fontWeight: 600 }}>{res.owner}</p>
+                             <div style={{ marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontSize: '11px', color: '#a0a0a0' }}>Checked 10m ago</span>
+                                <ExternalLink size={14} color="#a0a0a0" />
+                             </div>
+                          </div>
+                        ))}
                      </div>
                   </div>
                </div>
