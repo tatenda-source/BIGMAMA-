@@ -10,14 +10,13 @@
     <meta name="referrer" content="no-referrer" />
     <meta name="robots" content="noindex,nofollow" />
     <!--
-      Content-Security-Policy: a strict-by-default policy for the static app.
-      Production deployments should send this via HTTP headers (stronger than
-      meta). The server config in docs/security.md mirrors this policy.
+      Content-Security-Policy is deliberately NOT set here. Browsers intersect
+      meta CSP with header CSP, and Vite's HMR in dev needs 'unsafe-inline' +
+      'unsafe-eval' that a strict meta would forbid. The production CSP
+      (including frame-ancestors, which is meta-ignored anyway) must ship via
+      HTTP response headers — see docs/security.md for the exact policy every
+      deploy target must send.
     -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
-    />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta http-equiv="Permissions-Policy" content="camera=(self), geolocation=(self), microphone=(), payment=(), usb=(), interest-cohort=()" />
 
