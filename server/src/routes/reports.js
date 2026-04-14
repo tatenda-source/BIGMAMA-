@@ -193,6 +193,5 @@ async function readWithLimit(request, maxBytes) {
  * @param {{ caseId: string, status: string, ms: number }} ev
  */
 function logEvent(ev) {
-  // eslint-disable-next-line no-console
   console.log(JSON.stringify({ evt: 'report', ...ev }));
 }

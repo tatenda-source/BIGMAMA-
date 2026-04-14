@@ -32,7 +32,6 @@ export default {
       response = await route(request, env, ctx);
     } catch (err) {
       // Never leak error detail.
-      // eslint-disable-next-line no-console
       console.log(JSON.stringify({ evt: 'unhandled', msg: safeError(err) }));
       response = jsonError('internal_error', 500);
     }
