@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import ReportForm from './components/ReportForm';
+import HotspotMap from './components/HotspotMap';
 
 const NavItem = ({ icon: Icon, label, active, onClick, collapsed }) => (
   <button 
@@ -223,7 +224,42 @@ function App() {
               </div>
             )}
 
-            {activeTab !== 'dashboard' && (
+            {activeTab === 'map' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <HotspotMap />
+                <div className="glass-card" style={{ padding: '24px' }}>
+                  <h3 className="font-display" style={{ marginBottom: '16px' }}>Regional Statistics</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+                    {[
+                      { label: 'Total Area Scanned', val: '4,280 ha', color: '#00f2ff' },
+                      { label: 'Active Hotspots', val: '12', color: '#ff007a' },
+                      { label: 'Resolved Cases', val: '86', color: '#7000ff' },
+                      { label: 'Verification rate', val: '92%', color: '#00ffaa' }
+                    ].map(s => (
+                      <div key={s.label}>
+                        <p style={{ fontSize: '12px', color: '#a0a0a0', marginBottom: '4px' }}>{s.label}</p>
+                        <p style={{ fontSize: '20px', fontWeight: 700, color: s.color }}>{s.val}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'verify' && (
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                  <div className="glass-card" style={{ padding: '40px', background: 'linear-gradient(135deg, rgba(0, 242, 255, 0.05), rgba(0,0,0,0))' }}>
+                     <h3 className="font-display" style={{ fontSize: '24px', marginBottom: '8px' }}>Land Verification Tool</h3>
+                     <p style={{ color: '#a0a0a0', marginBottom: '24px' }}>Enter property details to check legitimacy status against state records.</p>
+                     <div style={{ display: 'flex', gap: '12px' }}>
+                        <input type="text" placeholder="Enter Stand Number / Property ID..." style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px', color: 'white' }} />
+                        <button className="btn-primary" style={{ padding: '0 32px' }}>Verify Property</button>
+                     </div>
+                  </div>
+               </div>
+            )}
+
+            {!['dashboard', 'map', 'verify'].includes(activeTab) && (
               <div className="glass-card" style={{ padding: '80px', textAlign: 'center' }}>
                 <h3 className="font-display" style={{ fontSize: '24px', marginBottom: '16px' }}>Module Under Construction</h3>
                 <p style={{ color: '#a0a0a0' }}>We are currently building the {activeTab} feature to the highest standards.</p>
