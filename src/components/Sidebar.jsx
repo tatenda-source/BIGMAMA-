@@ -62,6 +62,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, activeTab, setActiveTab, set
         <NavItem icon={AlertTriangle} label="Report" active={activeTab === 'report'} onClick={() => setActiveTab('report')} collapsed={!isSidebarOpen} />
         <NavItem icon={Search} label="Verify" active={activeTab === 'verify'} onClick={() => setActiveTab('verify')} collapsed={!isSidebarOpen} />
         <NavItem icon={Users} label="Community" active={activeTab === 'community'} onClick={() => setActiveTab('community')} collapsed={!isSidebarOpen} />
+        <NavItem icon={Settings} label="Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} collapsed={!isSidebarOpen} />
         
         <div style={{ margin: '20px 0', height: '1px', background: 'rgba(255,255,255,0.1)' }} />
         

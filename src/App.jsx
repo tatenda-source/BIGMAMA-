@@ -18,14 +18,26 @@ import HotspotMap from './components/HotspotMap';
 import ReportForm from './components/ReportForm';
 import AuthorityDashboard from './components/AuthorityDashboard';
 import CommunityHub from './components/CommunityHub';
+import SettingsView from './components/SettingsView';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [lowDataMode, setLowDataMode] = useState(false);
 
   return (
-    <div className="app-container" style={{ display: 'flex', minHeight: '100vh', background: '#050505', color: 'white' }}>
+    <div 
+      className="app-container" 
+      style={{ 
+        display: 'flex', 
+        minHeight: '100vh', 
+        background: '#050505', 
+        color: 'white',
+        '--glass-blur': lowDataMode ? '0px' : '20px',
+        '--transition-speed': lowDataMode ? '0s' : '0.3s'
+      }}
+    >
       <Sidebar 
         isSidebarOpen={isSidebarOpen} 
         setIsSidebarOpen={setIsSidebarOpen} 
@@ -171,7 +183,11 @@ const App = () => {
               <CommunityHub />
             )}
 
-            {!['dashboard', 'map', 'verify', 'authority', 'community'].includes(activeTab) && (
+            {activeTab === 'settings' && (
+              <SettingsView lowDataMode={lowDataMode} setLowDataMode={setLowDataMode} />
+            )}
+
+            {!['dashboard', 'map', 'verify', 'authority', 'community', 'settings'].includes(activeTab) && (
               <div className="glass-card" style={{ padding: '80px', textAlign: 'center' }}>
                 <h3 className="font-display" style={{ fontSize: '24px', marginBottom: '16px' }}>Module Under Construction</h3>
                 <p style={{ color: '#a0a0a0' }}>We are currently building the {activeTab} feature to the highest standards.</p>
