@@ -1,0 +1,17 @@
+# BIGMAMA$ — local Worker secrets
+#
+# Copy to `.dev.vars` (gitignored) before running `wrangler dev`:
+#   cp .dev.vars.example .dev.vars
+#
+# Generate a real SERVER_SECRET once with:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+#
+# In production, put real secrets with:
+#   wrangler secret put SERVER_SECRET   --env production
+#   wrangler secret put RATE_LIMIT_SALT --env production
+#
+# These are NEVER committed and NEVER logged.
+
+SERVER_SECRET=replace-me-with-32-bytes-of-random-hex-0000000000000000000000000000
+RATE_LIMIT_SALT=replace-me-with-a-rolling-salt-rotate-quarterly
+ALLOWED_ORIGINS=http://localhost:5173
