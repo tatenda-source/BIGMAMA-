@@ -1,32 +1,46 @@
 import React from 'react';
-import { Map as MapIcon, Share2, ExternalLink, ChevronRight } from 'lucide-react';
+import { Map as MapIcon, Share2, ExternalLink } from 'lucide-react';
+import { CardItem, IconAvatar, Badge } from '../primitives';
 
-const FeedItem = ({ title, time, description, tags, id }) => {
-  return (
-    <div style={{ display: 'flex', gap: '16px', padding: '16px', borderRadius: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-       <div style={{ width: '60px', height: '60px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
-          <MapIcon color="#a0a0a0" />
-       </div>
-       <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-             <span style={{ fontWeight: 600 }}>{title}</span>
-             <span style={{ fontSize: '12px', color: '#a0a0a0' }}>{time}</span>
+const FeedItem = ({ title, time, description, tags = [], id }) => (
+  <CardItem as="article" padding="md" aria-labelledby={id ? `feed-${id}-title` : undefined}>
+    <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
+      <IconAvatar icon={MapIcon} size={60} />
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', gap: 'var(--space-sm)', marginBottom: 4 }}>
+          <h3
+            id={id ? `feed-${id}-title` : undefined}
+            style={{ fontWeight: 600, fontSize: 15, margin: 0, color: 'var(--color-text)' }}
+          >
+            {title}
+          </h3>
+          <time style={{ fontSize: 12, color: 'var(--color-text-dim)', flexShrink: 0 }}>{time}</time>
+        </header>
+
+        <p style={{ color: 'var(--color-text-dim)', fontSize: 14, marginBottom: 'var(--space-sm)' }}>
+          {description}
+        </p>
+
+        {tags.length > 0 && (
+          <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
+            {tags.map((tag) => (
+              <Badge key={tag.label} accent={tag.color}>{tag.label}</Badge>
+            ))}
           </div>
-          <p style={{ color: '#a0a0a0', fontSize: '14px', marginBottom: '8px' }}>{description}</p>
-          <div style={{ display: 'flex', gap: '8px' }}>
-             {tags.map(tag => (
-               <span key={tag.label} style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '4px', background: `${tag.color}22`, color: tag.color }}>
-                 {tag.label}
-               </span>
-             ))}
-          </div>
-       </div>
-       <div style={{ display: 'flex', gap: '12px' }}>
-          <Share2 size={18} style={{ cursor: 'pointer', color: '#a0a0a0' }} />
-          <ExternalLink size={18} style={{ cursor: 'pointer', color: '#a0a0a0' }} />
-       </div>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', gap: 'var(--space-md)' }}>
+        <button type="button" aria-label="Share" className="bm-icon-button">
+          <Share2 size={18} aria-hidden="true" />
+        </button>
+        <button type="button" aria-label="Open details" className="bm-icon-button">
+          <ExternalLink size={18} aria-hidden="true" />
+        </button>
+      </div>
     </div>
-  );
-};
+  </CardItem>
+);
 
 export default FeedItem;
