@@ -1,0 +1,29 @@
+{
+  "name": "@bigmama/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BIGMAMA$ edge backend — accepts client-encrypted civic reports",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "echo 'no TypeScript sources — skipping'",
+    "lint": "eslint \"src/**/*.js\" \"tests/**/*.js\""
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.5.0",
+    "@cloudflare/workers-types": "^4.20241004.0",
+    "eslint": "^9.12.0",
+    "miniflare": "^3.20241004.0",
+    "vitest": "^2.1.0",
+    "wrangler": "^3.80.0"
+  }
+}
