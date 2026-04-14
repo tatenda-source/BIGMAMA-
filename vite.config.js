@@ -8,7 +8,11 @@ import react from '@vitejs/plugin-react';
  * deployments the server (Cloudflare, Nginx, Netlify `_headers`) must send
  * equivalent response headers — meta tags are a fallback.
  */
+// CSP with frame-ancestors lives in HTTP headers here (it's ignored from a
+// meta tag). The full production policy is tracked in docs/security.md.
 const securityHeaders = {
+  'Content-Security-Policy':
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'no-referrer',
