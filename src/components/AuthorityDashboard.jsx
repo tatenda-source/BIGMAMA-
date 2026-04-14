@@ -12,6 +12,7 @@ import {
   Download
 } from 'lucide-react';
 import Card from './Card';
+import StatCard from './StatCard';
 
 const AuthorityDashboard = () => {
   const cases = [
@@ -30,13 +31,7 @@ const AuthorityDashboard = () => {
           { label: 'Cases Resolved', val: '1,087', icon: CheckCircle2, color: '#00ffaa' },
           { label: 'Active Activists', val: '86', icon: Users, color: '#00f2ff' }
         ].map(stat => (
-          <div key={stat.label} className="glass-card" style={{ padding: '24px' }}>
-             <p style={{ fontSize: '12px', color: '#a0a0a0', marginBottom: '8px' }}>{stat.label}</p>
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                <span style={{ fontSize: '32px', fontWeight: 700, color: stat.color }}>{stat.val}</span>
-                <stat.icon size={24} color={stat.color} opacity={0.5} />
-             </div>
-          </div>
+          <StatCard key={stat.label} {...stat} />
         ))}
       </div>
 
