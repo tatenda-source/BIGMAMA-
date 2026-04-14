@@ -7,17 +7,28 @@ import { emergencyWipe } from '../lib/wipe.js';
 import { wipeServiceWorker } from '../pwa/register-sw.js';
 
 const SettingsView = ({ lowDataMode, setLowDataMode }) => {
-  const [wipeState, setWipeState] = useState('idle'); // idle | wiping | done
+  // Two-click confirm avoids relying on window.confirm (blocked by CSP in
+  // some embeds and inconsistent across browsers).
+  const [wipeState, setWipeState] = useState('idle'); // idle | confirm | wiping | done
 
   const handleWipe = async () => {
-    if (!window.confirm('Emergency wipe will clear all local app data on this device. Continue?')) {
+    if (wipeState === 'idle') {
+      setWipeState('confirm');
       return;
     }
+    if (wipeState !== 'confirm') return;
     setWipeState('wiping');
     await Promise.allSettled([emergencyWipe(), wipeServiceWorker()]);
     setWipeState('done');
     setTimeout(() => window.location.reload(), 400);
   };
+
+  const wipeLabel = {
+    idle: 'Execute',
+    confirm: 'Confirm wipe',
+    wiping: 'Wiping…',
+    done: 'Wiped',
+  }[wipeState];
 
   return (
     <div className="bm-stack-lg" style={{ maxWidth: '800px' }}>
@@ -48,7 +59,7 @@ const SettingsView = ({ lowDataMode, setLowDataMode }) => {
             title="Emergency Wipe"
             description="Clears local storage, caches, and service workers on this device."
             color="var(--color-accent-magenta)"
-            action={wipeState === 'wiping' ? 'Wiping…' : wipeState === 'done' ? 'Wiped' : 'Execute'}
+            action={wipeLabel}
             onAction={handleWipe}
           />
         </div>
