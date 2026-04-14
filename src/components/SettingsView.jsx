@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import SettingsOption from './SettingsOption';
 import PrivacyStat from './PrivacyStat';
+import { calculateDataSavings } from '../utils/performance';
 
 const SettingsView = ({ lowDataMode, setLowDataMode }) => {
   return (
@@ -49,9 +50,9 @@ const SettingsView = ({ lowDataMode, setLowDataMode }) => {
          <h3 className="font-display" style={{ marginBottom: '24px' }}>Data & Privacy Stats</h3>
          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <PrivacyStat 
-              label="Data usage (This Month)" 
-              value="12.4 MB" 
-              subtext="↓ 45% with Low Data Mode" 
+              label="Data optimization" 
+              value={`${calculateDataSavings(28)} MB`} 
+              subtext="Saved this month" 
               color="#00ffaa" 
             />
             <PrivacyStat 
