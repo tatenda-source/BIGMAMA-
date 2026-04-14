@@ -10,6 +10,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import SettingsOption from './SettingsOption';
+import PrivacyStat from './PrivacyStat';
 
 const SettingsView = ({ lowDataMode, setLowDataMode }) => {
   return (
@@ -47,16 +48,18 @@ const SettingsView = ({ lowDataMode, setLowDataMode }) => {
       <div className="glass-card" style={{ padding: '32px' }}>
          <h3 className="font-display" style={{ marginBottom: '24px' }}>Data & Privacy Stats</h3>
          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
-               <p style={{ fontSize: '12px', color: '#a0a0a0' }}>Data usage (This Month)</p>
-               <p style={{ fontSize: '24px', fontWeight: 700 }}>12.4 MB</p>
-               <p style={{ fontSize: '11px', color: '#00ffaa' }}>↓ 45% with Low Data Mode</p>
-            </div>
-            <div style={{ padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px' }}>
-               <p style={{ fontSize: '12px', color: '#a0a0a0' }}>Incident Encryption</p>
-               <p style={{ fontSize: '24px', fontWeight: 700 }}>AES-256</p>
-               <p style={{ fontSize: '11px', color: '#00ccff' }}>Military grade protection</p>
-            </div>
+            <PrivacyStat 
+              label="Data usage (This Month)" 
+              value="12.4 MB" 
+              subtext="↓ 45% with Low Data Mode" 
+              color="#00ffaa" 
+            />
+            <PrivacyStat 
+              label="Incident Encryption" 
+              value="AES-256" 
+              subtext="Military grade protection" 
+              color="#00ccff" 
+            />
          </div>
       </div>
     </div>
