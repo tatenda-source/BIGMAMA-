@@ -10,9 +10,10 @@ import { prepareReport } from '../lib/prepare-report.js';
 import { submitReport } from '../lib/submit-report.js';
 import { registerAbortable } from '../lib/wipe.js';
 
-const ENDPOINT = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE)
-  ? `${import.meta.env.VITE_API_BASE}/api/reports`
-  : '/api/reports';
+// Always relative — vite dev/preview proxy /api to the Worker, and in
+// production the frontend and backend sit behind the same origin (or a
+// pages.dev + Worker route). Removes the VITE_API_BASE class of mistakes.
+const ENDPOINT = '/api/reports';
 
 const initialFormState = {
   title: '',

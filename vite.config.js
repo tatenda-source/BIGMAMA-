@@ -35,9 +35,23 @@ export default defineConfig({
   plugins: [react()],
   server: {
     headers: baseSecurityHeaders,
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_BASE || 'http://localhost:8787',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   preview: {
     headers: previewSecurityHeaders,
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_BASE || 'http://localhost:8787',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   build: {
     target: 'es2020',
