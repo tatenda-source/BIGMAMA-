@@ -1,145 +1,108 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --primary: #00f2ff;
-  --primary-glow: rgba(0, 242, 255, 0.4);
-  --secondary: #7000ff;
-  --accent: #ff007a;
-  --bg-dark: #050505;
-  --bg-card: rgba(15, 15, 15, 0.7);
-  --border: rgba(255, 255, 255, 0.1);
-  --text-main: #ffffff;
-  --text-dim: #a0a0a0;
-  
-  --glass: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.125);
-  
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --font-body: 'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
-}
+/*
+ * Global stylesheet for BIGMAMA$.
+ *
+ * Responsibilities:
+ *  1. Pull in tokens and layer files in the correct order.
+ *  2. Reset, base typography, and focus-visible treatment.
+ *  3. Shared form controls used across components.
+ *
+ * Anything that looks like a component style belongs in the primitive or
+ * component file, not here. `.btn-primary` lives in src/styles/components.css
+ * only — the duplicate copy that lived here was removed.
+ */
 
-* {
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/glass.css";
+@import "./styles/components.css";
+@import "./primitives/primitives.css";
+
+html, body, #root {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  font-family: var(--font-body);
-  background: var(--bg-dark);
-  color: var(--text-main);
-  overflow-x: hidden;
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, .font-display {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(var(--glass-blur, 20px));
-  -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  padding: 12px 24px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition-speed, 0.3s) cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px var(--primary-glow);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--primary-glow);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate {
-  animation: fadeIn 0.8s ease forwards;
-}
-
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
+*:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+/* Respect reduced motion globally — Framer Motion hooks read this too. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* Shared form controls. Component files pick these up via classNames. */
+.bm-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.bm-form-label {
+  font-size: 13px;
   font-weight: 500;
-  color: var(--text-h);
+  color: var(--color-text-dim);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+.bm-form-required {
+  margin-left: 4px;
+  color: var(--color-accent-magenta);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+.bm-form-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition-speed);
+  resize: vertical;
+  min-height: 44px;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.bm-form-input::placeholder {
+  color: var(--color-text-muted);
 }
+
+.bm-form-input[aria-invalid="true"] {
+  border-color: var(--color-accent-red);
+}
+
+.bm-form-error {
+  color: var(--color-accent-red);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Utility: layout primitive replacing repeated inline flex-column-gap style */
+.bm-page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.bm-stack-sm { display: flex; flex-direction: column; gap: var(--space-sm); }
+.bm-stack-md { display: flex; flex-direction: column; gap: var(--space-md); }
+.bm-stack-lg { display: flex; flex-direction: column; gap: var(--space-lg); }
+.bm-row-sm { display: flex; gap: var(--space-sm); align-items: center; }
+.bm-row-md { display: flex; gap: var(--space-md); align-items: center; }
