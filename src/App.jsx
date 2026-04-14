@@ -17,6 +17,7 @@ import FeedItem from './components/FeedItem';
 import HotspotMap from './components/HotspotMap';
 import ReportForm from './components/ReportForm';
 import AuthorityDashboard from './components/AuthorityDashboard';
+import CommunityHub from './components/CommunityHub';
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -166,7 +167,11 @@ const App = () => {
               <AuthorityDashboard />
             )}
 
-            {!['dashboard', 'map', 'verify', 'authority'].includes(activeTab) && (
+            {activeTab === 'community' && (
+              <CommunityHub />
+            )}
+
+            {!['dashboard', 'map', 'verify', 'authority', 'community'].includes(activeTab) && (
               <div className="glass-card" style={{ padding: '80px', textAlign: 'center' }}>
                 <h3 className="font-display" style={{ fontSize: '24px', marginBottom: '16px' }}>Module Under Construction</h3>
                 <p style={{ color: '#a0a0a0' }}>We are currently building the {activeTab} feature to the highest standards.</p>
