@@ -8,6 +8,7 @@ import {
   Target
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { PLATFORM_NAME } from '../utils/constants';
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
   const menuItems = [
@@ -22,7 +23,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   return (
     <div style={{ width: '280px', height: '100vh', padding: '40px 24px', display: 'flex', flexDirection: 'column', gap: '40px', borderRight: '1px solid rgba(255,255,255,0.05)', background: 'rgba(5,5,5,0.2)' }}>
       <div style={{ padding: '0 12px' }}>
-         <h2 className="font-display" style={{ fontSize: '28px', fontWeight: 900, background: 'linear-gradient(to right, #00f2ff, #7000ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>BIGMAMA$</h2>
+         <h2 className="font-display" style={{ fontSize: '28px', fontWeight: 900, background: 'linear-gradient(to right, #00f2ff, #7000ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{PLATFORM_NAME}</h2>
       </div>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
