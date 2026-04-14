@@ -15,6 +15,8 @@ import FormInput from './FormInput';
 import AnonymityToggle from './AnonymityToggle';
 import MediaDropzone from './MediaDropzone';
 import ActionButton from './ActionButton';
+import { encryptData, sanitizeInput, generateCaseId } from '../utils/security';
+import { validateReport } from '../utils/validation';
 
 const ReportForm = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -29,8 +31,24 @@ const ReportForm = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate submission
-    alert("Report submitted successfully! Case ID: ZR-8291");
+    
+    const { isValid, errors } = validateReport(formData);
+    if (!isValid) {
+      alert(Object.values(errors)[0]);
+      return;
+    }
+
+    const sanitizedData = {
+      ...formData,
+      title: sanitizeInput(formData.title),
+      description: sanitizeInput(formData.description)
+    };
+
+    const encryptedPayload = encryptData(sanitizedData);
+    const caseId = generateCaseId();
+    
+    console.log("Submitting encrypted payload:", encryptedPayload);
+    alert(`Report submitted successfully! Case ID: ${caseId}`);
     onClose();
   };
 
