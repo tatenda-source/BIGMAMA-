@@ -121,7 +121,7 @@ describe('withRetry', () => {
 
 describe('CircuitBreaker', () => {
   it('opens after threshold failures and blocks calls', () => {
-    let t = 0;
+    const t = 0;
     const cb = new CircuitBreaker({ failureThreshold: 3, cooldownMs: 1000, now: () => t });
     expect(cb.allow()).toBe(true);
     cb.recordFailure(); cb.recordFailure(); cb.recordFailure();

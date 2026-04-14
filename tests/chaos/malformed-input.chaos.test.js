@@ -13,7 +13,7 @@
 //   4. Prototype pollution attempts do not mutate Object.prototype.
 //   5. Output HTML from sanitize() never contains executable script vectors.
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 
 // TODO: wire real import.
 import { validateReport, sanitizeHtml } from '../../src/lib/idempotency.js';
@@ -45,7 +45,7 @@ describe('chaos: malformed-input', () => {
   afterEach(() => {
     // Defensive: wipe any pollution the app may have introduced.
     // If these are set, a later test would fail — which is what we want.
-    delete Object.prototype.polluted; // eslint-disable-line no-extend-native
+    delete Object.prototype.polluted;
     vi.restoreAllMocks();
   });
 
@@ -101,7 +101,6 @@ describe('chaos: malformed-input', () => {
         `{"title":"ok","body":"ok","${key}":{"polluted":"yes"}}`,
       );
       validateReport(raw);
-      // eslint-disable-next-line no-prototype-builtins
       expect(Object.prototype.hasOwnProperty.call(Object.prototype, 'polluted')).toBe(
         false,
       );

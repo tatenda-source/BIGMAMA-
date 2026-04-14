@@ -44,8 +44,7 @@ describe('crypto.encrypt/decrypt', () => {
   });
 
   it('rejects non-string plaintext', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await expect(encryptAesGcm(/** @type {any} */ (123), 'pw')).rejects.toThrow(TypeError);
+    await expect(encryptAesGcm(123, 'pw')).rejects.toThrow(TypeError);
   });
 
   it('rejects empty password', async () => {

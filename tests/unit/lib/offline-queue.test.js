@@ -154,8 +154,8 @@ describe('OfflineQueue quota eviction', () => {
     q.onEviction = (it) => evictions.push(it.id);
     q.enqueue(mkItem(1));
     q.enqueue(mkItem(2));
-    // Restore a working setItem so eviction-retry can succeed.
-    storage.setItem = origSet;
+    // Third write throws QuotaExceeded once; eviction retry (setItem call #4)
+    // succeeds via the mock's default branch.
     q.enqueue(mkItem(3));
 
     // Queue should contain id-2 and id-3 (id-1 evicted).

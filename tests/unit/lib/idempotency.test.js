@@ -90,7 +90,7 @@ describe('IdempotencyStore', () => {
     s.remember('old', 1);
     t = 500;
     s.remember('new', 2);
-    t = 1800; // old expired, new still alive
+    t = 1200; // old expired (age 1200>1000), new still alive (age 700<1000)
     s.gc();
     expect(s.has('old')).toBe(false);
     expect(s.has('new')).toBe(true);
