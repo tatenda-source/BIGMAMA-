@@ -14,6 +14,7 @@ import FormHeader from './FormHeader';
 import FormInput from './FormInput';
 import AnonymityToggle from './AnonymityToggle';
 import MediaDropzone from './MediaDropzone';
+import ActionButton from './ActionButton';
 
 const ReportForm = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -64,14 +65,12 @@ const ReportForm = ({ onClose }) => {
               onChange={(e) => setFormData({...formData, description: e.target.value})}
               textarea
             />
-            <button 
-              type="button"
-              className="btn-primary" 
+            <ActionButton 
               style={{ width: '100%', marginTop: '12px' }}
               onClick={() => setStep(2)}
             >
               Next Step: Location & Media
-            </button>
+            </ActionButton>
           </div>
         )}
 
@@ -98,21 +97,20 @@ const ReportForm = ({ onClose }) => {
             </div>
 
             <div style={{ display: 'flex', gap: '12px' }}>
-              <button 
-                type="button"
-                className="btn-secondary" 
-                style={{ flex: 1, padding: '12px', borderRadius: '12px', background: 'rgba(255,255,255,0.05)', color: 'white', border: 'none', cursor: 'pointer' }}
+              <ActionButton 
+                variant="secondary" 
+                style={{ flex: 1, padding: '12px' }}
                 onClick={() => setStep(1)}
               >
                 Back
-              </button>
-              <button 
+              </ActionButton>
+              <ActionButton 
                 type="submit" 
-                className="btn-primary" 
-                style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
+                style={{ flex: 2 }}
+                icon={Send}
               >
-                Submit Report <Send size={20} />
-              </button>
+                Submit Report
+              </ActionButton>
             </div>
           </div>
         )}
