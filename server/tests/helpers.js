@@ -22,14 +22,12 @@ CREATE TABLE IF NOT EXISTS reports (
 CREATE INDEX IF NOT EXISTS idx_reports_created ON reports(created_at);
 `;
 
-let migrated = false;
-
-/** Run schema once per suite. */
+/**
+ * Run schema. CREATE TABLE IF NOT EXISTS is idempotent so we can call this
+ * from every beforeEach without worrying about module-scope test order.
+ */
 export async function applyMigrations() {
-  if (migrated) return;
-  // exec() splits on ';' — statements end with ; above.
   await env.DB.exec(INIT_SQL.replace(/\n/g, ' ').trim());
-  migrated = true;
 }
 
 /**
@@ -39,7 +37,12 @@ export async function applyMigrations() {
 export function randomBase64Url(n) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-';
   const bytes = new Uint8Array(n);
-  crypto.getRandomValues(bytes);
+  // WebCrypto caps getRandomValues at 65_536 bytes per call; chunk for
+  // tests that need to assert on the 340_000-char CT_MAX upper bound.
+  const CHUNK = 65_536;
+  for (let offset = 0; offset < n; offset += CHUNK) {
+    crypto.getRandomValues(bytes.subarray(offset, Math.min(offset + CHUNK, n)));
+  }
   let out = '';
   for (let i = 0; i < n; i++) out += alphabet[bytes[i] & 63];
   return out;
