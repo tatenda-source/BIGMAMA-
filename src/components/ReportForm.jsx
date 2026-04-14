@@ -10,6 +10,7 @@ import {
   Upload,
   Info
 } from 'lucide-react';
+import FormHeader from './FormHeader';
 
 const ReportForm = ({ onClose }) => {
   const [step, setStep] = useState(1);
@@ -42,12 +43,7 @@ const ReportForm = ({ onClose }) => {
         overflowY: 'auto'
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 className="font-display" style={{ fontSize: '24px' }}>Submit <span style={{ color: '#00f2ff' }}>Incident</span></h2>
-        <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#a0a0a0', cursor: 'pointer' }}>
-          <X size={24} />
-        </button>
-      </div>
+      <FormHeader onClose={onClose} />
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {/* Step 1: Details */}
