@@ -11,6 +11,9 @@
   /* Dynamic performance variables */
   --glass-blur: 20px;
   --transition-speed: 0.3s;
+  
+  --grad-primary: linear-gradient(135deg, #00f2ff, #7000ff);
+  --grad-danger: linear-gradient(135deg, #ff007a, #7000ff);
 }
 
 [data-low-data="true"] {
