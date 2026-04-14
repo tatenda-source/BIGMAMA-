@@ -1,86 +1,164 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, AlertCircle, CheckCircle2, Navigation } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import { Navigation, AlertTriangle, RefreshCw } from 'lucide-react';
+import { resolveHotspotProvider, ZIMBABWE_BBOX } from '../lib/hotspots.js';
+import 'leaflet/dist/leaflet.css';
+
+const INTENSITY_COLOR = {
+  high: 'var(--color-accent-magenta, #ff007a)',
+  medium: 'var(--color-accent-amber, #ffb020)',
+  low: 'var(--color-accent-cyan, #00f2ff)',
+};
+
+const CENTER = [(ZIMBABWE_BBOX.north + ZIMBABWE_BBOX.south) / 2, (ZIMBABWE_BBOX.east + ZIMBABWE_BBOX.west) / 2];
+
+/** Pans the map to the current hotspot bounds after data loads. */
+function FitBounds({ points }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!points.length) return;
+    const lats = points.map((p) => p.lat);
+    const lngs = points.map((p) => p.lng);
+    const bounds = [
+      [Math.min(...lats), Math.min(...lngs)],
+      [Math.max(...lats), Math.max(...lngs)],
+    ];
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 7 });
+  }, [map, points]);
+  return null;
+}
 
 const HotspotMap = () => {
-  const [selectedHotspot, setSelectedHotspot] = useState(null);
+  const [result, setResult] = useState({ status: 'loading', points: [], error: null });
+  const [reloadCount, setReloadCount] = useState(0);
 
-  const hotspots = [
-    { id: 1, x: 200, y: 150, status: 'unverified', title: 'Harare North', intensity: 'high' },
-    { id: 2, x: 450, y: 300, status: 'verified', title: 'Borrowdale East', intensity: 'low' },
-    { id: 3, x: 300, y: 450, status: 'investigating', title: 'Mount Pleasant', intensity: 'medium' },
-  ];
+  const provider = useMemo(() => resolveHotspotProvider(), []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let cancelled = false;
+
+    provider
+      .loader({ signal: controller.signal })
+      .then((data) => {
+        if (cancelled) return;
+        setResult({ status: 'ready', points: data, error: null });
+      })
+      .catch((err) => {
+        if (cancelled || err?.name === 'AbortError') return;
+        setResult({ status: 'error', points: [], error: err?.message ?? 'Failed to load hotspots' });
+      });
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [provider, reloadCount]);
+
+  const { status, points, error } = result;
+
+  const counts = useMemo(() => {
+    const by = { high: 0, medium: 0, low: 0 };
+    for (const p of points) by[p.intensity]++;
+    return by;
+  }, [points]);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '500px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-      {/* Dynamic Grid Background */}
-      <svg width="100%" height="100%" style={{ position: 'absolute', opacity: 0.1 }}>
-        <defs>
-          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-      </svg>
-
-      {/* Map Content */}
-      <div style={{ position: 'relative', zIndex: 1, padding: '40px' }}>
-        <div style={{ marginBottom: '24px' }}>
-          <h3 className="font-display" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Navigation size={20} color="#00f2ff" /> Hotspot Visualization
+    <div
+      className="glass-card"
+      style={{ overflow: 'hidden', border: '1px solid var(--color-border-subtle)' }}
+    >
+      <header style={{ padding: '24px 24px 16px', display: 'flex', gap: 16, alignItems: 'start', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <div>
+          <h3 className="font-display" style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
+            <Navigation size={20} color="var(--color-accent-cyan)" aria-hidden="true" />
+            Live Hotspot Map
           </h3>
-          <p style={{ color: '#a0a0a0', fontSize: '14px' }}>Real-time spatial data of land activity reports.</p>
+          <p style={{ color: 'var(--color-text-dim)', fontSize: 13, margin: '6px 0 0' }}>
+            Source: <strong style={{ color: 'var(--color-text)' }}>{provider.name.toUpperCase()}</strong>
+            {provider.reason ? (
+              <span style={{ color: 'var(--color-accent-amber)' }}> — {provider.reason}</span>
+            ) : null}
+            {status === 'ready' && (
+              <> · {points.length} active · {counts.high} high / {counts.medium} med / {counts.low} low</>
+            )}
+          </p>
         </div>
+        <button
+          type="button"
+          onClick={() => setReloadCount((n) => n + 1)}
+          disabled={status === 'loading'}
+          aria-label="Refresh hotspots"
+          className="bm-icon-button"
+          style={{ padding: 8 }}
+        >
+          <RefreshCw size={18} aria-hidden="true" className={status === 'loading' ? 'bm-spin' : undefined} />
+        </button>
+      </header>
 
-        <svg viewBox="0 0 800 600" style={{ width: '100%', height: '400px' }}>
-          {/* Simulated Land Parcels */}
-          <path d="M100,100 L250,80 L300,200 L120,220 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" />
-          <path d="M400,150 L550,140 L580,280 L420,300 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" />
-          
-          {/* Hotspots */}
-          {hotspots.map((h) => (
-            <motion.g 
-              key={h.id}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              whileHover={{ scale: 1.2 }}
-              onClick={() => setSelectedHotspot(h)}
-              style={{ cursor: 'pointer' }}
+      <div style={{ position: 'relative', height: 500 }}>
+        <MapContainer
+          center={CENTER}
+          zoom={6}
+          style={{ height: '100%', width: '100%', background: '#0a0a0a' }}
+          scrollWheelZoom={false}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &middot; &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          />
+          <FitBounds points={points} />
+          {points.map((p) => (
+            <CircleMarker
+              key={p.id}
+              center={[p.lat, p.lng]}
+              radius={p.intensity === 'high' ? 10 : p.intensity === 'medium' ? 7 : 5}
+              pathOptions={{
+                color: INTENSITY_COLOR[p.intensity],
+                fillColor: INTENSITY_COLOR[p.intensity],
+                fillOpacity: 0.45,
+                weight: 1.5,
+              }}
             >
-              {/* Glow Effect */}
-              <circle cx={h.x} cy={h.y} r="15" fill={h.status === 'unverified' ? '#ff007a' : '#00f2ff'} opacity="0.3">
-                <animate attributeName="r" values="10;20;10" dur="2s" repeatCount="indefinite" />
-              </circle>
-              <circle cx={h.x} cy={h.y} r="6" fill={h.status === 'unverified' ? '#ff007a' : '#00f2ff'} stroke="white" strokeWidth="2" />
-            </motion.g>
+              <Popup>
+                <strong>{p.title}</strong>
+                <br />
+                <span style={{ fontSize: 12 }}>
+                  {p.source} · {p.intensity}
+                  <br />
+                  {new Date(p.ts).toLocaleString()}
+                </span>
+              </Popup>
+            </CircleMarker>
           ))}
-        </svg>
+        </MapContainer>
 
-        {/* Legend */}
-        <div style={{ position: 'absolute', bottom: '24px', right: '24px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(0,0,0,0.5)', padding: '12px', borderRadius: '12px', backdropFilter: 'blur(10px)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ff007a' }} /> Unverified Report
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00f2ff' }} /> Verified Case
-          </div>
-        </div>
-
-        {/* Hotspot Detail Overlay */}
-        {selectedHotspot && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{ position: 'absolute', top: '100px', left: '40px', background: 'rgba(15,15,15,0.95)', border: '1px solid #00f2ff33', borderRadius: '16px', padding: '16px', width: '240px', backdropFilter: 'blur(10px)', zIndex: 10 }}
+        {status === 'error' && (
+          <div
+            role="alert"
+            style={{
+              position: 'absolute', inset: 0, display: 'grid', placeItems: 'center',
+              background: 'rgba(5,5,5,0.75)', backdropFilter: 'blur(6px)', color: 'var(--color-text)',
+              textAlign: 'center', padding: 24,
+            }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: '#00f2ff' }}>{selectedHotspot.status}</span>
-              <button onClick={() => setSelectedHotspot(null)} style={{ background: 'transparent', border: 'none', color: '#a0a0a0', cursor: 'pointer' }}>×</button>
+            <div>
+              <AlertTriangle size={28} color="var(--color-accent-amber)" aria-hidden="true" />
+              <p style={{ marginTop: 12 }}>Couldn't load live hotspots.</p>
+              <p style={{ color: 'var(--color-text-dim)', fontSize: 12, marginTop: 4 }}>{error}</p>
+              <button
+                type="button"
+                onClick={() => setReloadCount((n) => n + 1)}
+                style={{
+                  marginTop: 16, padding: '8px 14px', borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--color-border-strong)', background: 'transparent',
+                  color: 'var(--color-text)', cursor: 'pointer',
+                }}
+              >
+                Try again
+              </button>
             </div>
-            <h4 style={{ marginBottom: '4px' }}>{selectedHotspot.title}</h4>
-            <p style={{ fontSize: '13px', color: '#a0a0a0', marginBottom: '12px' }}>Reports of unauthorized construction on Lot 4B.</p>
-            <button className="btn-primary" style={{ width: '100%', fontSize: '12px', padding: '8px' }}>View Details</button>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

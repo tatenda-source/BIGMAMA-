@@ -138,6 +138,29 @@ html, body, #root {
   border-color: var(--color-accent-cyan);
 }
 
+/* Leaflet map container overrides for the dark theme. */
+.leaflet-container {
+  font-family: var(--font-main);
+  background: #0a0a0a !important;
+  border-radius: var(--radius-lg);
+}
+.leaflet-container a.leaflet-popup-close-button { color: var(--color-text-dim); }
+.leaflet-popup-content-wrapper {
+  background: rgba(15,15,15,0.95) !important;
+  color: var(--color-text) !important;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-strong);
+}
+.leaflet-popup-tip { background: rgba(15,15,15,0.95) !important; }
+.leaflet-control-attribution {
+  background: rgba(0,0,0,0.5) !important;
+  color: var(--color-text-dim) !important;
+}
+.leaflet-control-attribution a { color: var(--color-accent-cyan) !important; }
+
+@keyframes bm-spin { to { transform: rotate(360deg); } }
+.bm-spin { animation: bm-spin 0.8s linear infinite; }
+
 /* Visually hidden but screen-reader available. */
 .sr-only {
   position: absolute;
