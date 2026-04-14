@@ -10,8 +10,8 @@ import {
   ExternalLink,
   ChevronRight
 } from 'lucide-react';
-import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import ActionButton from './components/ActionButton';
 import Card from './components/Card';
 import FeedItem from './components/FeedItem';
