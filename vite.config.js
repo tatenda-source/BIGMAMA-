@@ -8,26 +8,36 @@ import react from '@vitejs/plugin-react';
  * deployments the server (Cloudflare, Nginx, Netlify `_headers`) must send
  * equivalent response headers — meta tags are a fallback.
  */
-// CSP with frame-ancestors lives in HTTP headers here (it's ignored from a
-// meta tag). The full production policy is tracked in docs/security.md.
-const securityHeaders = {
-  'Content-Security-Policy':
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ws: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
+// CSP lives on HTTP responses, not in the HTML meta (meta ignores
+// frame-ancestors and browsers intersect the two). The full production
+// policy is owned by the deploy target — see docs/security.md.
+//
+// Dev server DOES NOT send CSP: Vite's HMR WebSocket + React Fast Refresh
+// inline-evals would be blocked even with permissive directives on some
+// browsers, and dev is localhost-only anyway. The preview server simulates
+// production so we can validate CSP before shipping.
+const baseSecurityHeaders = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'no-referrer',
   'Permissions-Policy':
     'camera=(self), geolocation=(self), microphone=(), payment=(), usb=(), interest-cohort=()',
+};
+
+const previewSecurityHeaders = {
+  ...baseSecurityHeaders,
+  'Content-Security-Policy':
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'",
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
 };
 
 export default defineConfig({
   plugins: [react()],
   server: {
-    headers: securityHeaders,
+    headers: baseSecurityHeaders,
   },
   preview: {
-    headers: securityHeaders,
+    headers: previewSecurityHeaders,
   },
   build: {
     target: 'es2020',
