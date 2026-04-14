@@ -10,6 +10,9 @@ import {
   Plus
 } from 'lucide-react';
 import DiscussionPost from './DiscussionPost';
+import PetitionCard from './PetitionCard';
+import ActionButton from './ActionButton';
+import CampaignCard from './CampaignCard';
 
 const CommunityHub = () => {
   const petitions = [
@@ -28,10 +31,14 @@ const CommunityHub = () => {
         {/* Discussion Forum */}
         <div className="glass-card" style={{ padding: '32px' }}>
            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-              <h3 className="font-display">Community Discussions</h3>
-              <button style={{ background: '#00f2ff1a', border: '1px solid #00f2ff33', color: '#00f2ff', padding: '8px 16px', borderRadius: '12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                 <Plus size={16} /> Start Topic
-              </button>
+              <h2 className="font-display" style={{ fontSize: '24px' }}>Community Discussion</h2>
+              <ActionButton 
+                variant="primary" 
+                style={{ padding: '8px 16px', fontSize: '13px' }}
+                icon={Plus}
+              >
+                New Post
+              </ActionButton>
            </div>
            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {discussions.map(d => (
@@ -46,36 +53,12 @@ const CommunityHub = () => {
               <h3 className="font-display" style={{ marginBottom: '20px', fontSize: '18px' }}>Active Petitions</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                  {petitions.map(p => (
-                    <div key={p.id} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                       <p style={{ fontWeight: 600, fontSize: '14px' }}>{p.title}</p>
-                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                          <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
-                             <motion.div 
-                               initial={{ width: 0 }}
-                               animate={{ width: `${p.prog}%` }}
-                               style={{ height: '100%', background: 'linear-gradient(to right, #00f2ff, #7000ff)' }} 
-                             />
-                          </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#a0a0a0' }}>
-                             <span>{p.signatures.toLocaleString()} signed</span>
-                             <span>{p.target.toLocaleString()} target</span>
-                          </div>
-                       </div>
-                       <button style={{ width: '100%', background: '#ff007a1a', border: '1px solid #ff007a33', color: '#ff007a', padding: '10px', borderRadius: '10px', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}>
-                          Sign Petition
-                       </button>
-                    </div>
+                    <PetitionCard key={p.id} {...p} />
                  ))}
               </div>
            </div>
 
-           <div className="glass-card" style={{ padding: '24px', background: 'linear-gradient(135deg, rgba(112,0,255,0.1), rgba(0,242,255,0.1))' }}>
-              <h3 className="font-display" style={{ marginBottom: '12px', fontSize: '18px' }}>Launch Campaign</h3>
-              <p style={{ fontSize: '13px', color: '#a0a0a0', marginBottom: '20px' }}>Start a movement against illegal land activities in your area.</p>
-              <button className="btn-primary" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                 <Flag size={18} /> New Campaign
-              </button>
-           </div>
+           <CampaignCard />
         </div>
       </div>
     </div>
