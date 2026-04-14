@@ -20,6 +20,7 @@ import {
   FileText
 } from 'lucide-react';
 import { clsx } from 'clsx';
+import ReportForm from './components/ReportForm';
 
 const NavItem = ({ icon: Icon, label, active, onClick, collapsed }) => (
   <button 
@@ -60,6 +61,7 @@ const Card = ({ title, subtitle, icon: Icon, color, children }) => (
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   return (
     <div className="app-container" style={{ display: 'flex', minHeight: '100vh', background: '#050505', color: 'white' }}>
@@ -97,6 +99,7 @@ function App() {
           
           <div style={{ margin: '20px 0', height: '1px', background: 'rgba(255,255,255,0.1)' }} />
           
+          <NavItem icon={AlertTriangle} label="Report Incident" active={false} onClick={() => setShowReportModal(true)} collapsed={!isSidebarOpen} />
           <NavItem icon={FileText} label="Authority" active={activeTab === 'authority'} onClick={() => setActiveTab('authority')} collapsed={!isSidebarOpen} />
         </nav>
 
@@ -130,7 +133,11 @@ function App() {
                 style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '10px 10px 10px 40px', color: 'white', outline: 'none' }}
               />
             </div>
-            <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button 
+              onClick={() => setShowReportModal(true)}
+              className="btn-primary" 
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            >
               <AlertTriangle size={18} /> New Report
             </button>
             <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
@@ -223,6 +230,29 @@ function App() {
               </div>
             )}
           </motion.div>
+        </AnimatePresence>
+
+        {/* Modal Overlay */}
+        <AnimatePresence>
+          {showReportModal && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ 
+                position: 'fixed', 
+                inset: 0, 
+                background: 'rgba(0,0,0,0.8)', 
+                backdropFilter: 'blur(8px)',
+                zIndex: 100,
+                display: 'grid',
+                placeItems: 'center',
+                padding: '20px'
+              }}
+            >
+              <ReportForm onClose={() => setShowReportModal(false)} />
+            </motion.div>
+          )}
         </AnimatePresence>
       </main>
     </div>
