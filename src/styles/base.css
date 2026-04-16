@@ -1,23 +1,85 @@
+/*
+ * Reset + base typography for Civic Dossier.
+ *
+ * Paper is the default surface. Body copy is Public Sans at a comfortable
+ * editorial leading. Headings are Fraunces with its opsz axis tuned for
+ * display sizes. We deliberately set a warm dark ink for body text so the
+ * page feels printed, not screen-rendered.
+ */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  background: var(--background);
-  color: white;
+html {
   font-family: var(--font-main);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga', 'calt', 'ss01', 'ss02';
+  font-variation-settings: 'opsz' 14;
+}
+
+body {
+  font-family: var(--font-main);
+  font-size: 15px;
+  line-height: var(--leading-body);
+  background: var(--paper);
+  color: var(--ink);
   min-height: 100vh;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, .font-display {
+h1, h2, h3, h4, h5, h6, .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: var(--leading-tight);
+  color: var(--ink);
 }
 
-button {
-  font-family: var(--font-main);
+h1 {
+  font-variation-settings: 'opsz' 144, 'wght' 500, 'SOFT' 0;
+  font-size: clamp(34px, 5vw, 58px);
+  letter-spacing: -0.025em;
 }
+h2 { font-variation-settings: 'opsz' 72, 'wght' 500;  font-size: clamp(24px, 3vw, 36px); }
+h3 { font-variation-settings: 'opsz' 36, 'wght' 500;  font-size: clamp(20px, 2.2vw, 24px); }
+h4 { font-variation-settings: 'opsz' 24, 'wght' 600;  font-size: 18px; }
+
+p  { line-height: var(--leading-body); }
+em { font-family: var(--font-display); font-style: italic; }
+
+button, input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+button { background: transparent; border: 0; cursor: pointer; }
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--ochre);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--transition-speed);
+}
+a:hover { text-decoration-color: var(--ink); }
+
+code, pre, .font-mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+/* ---- Selection: inked on ochre ---- */
+::selection { background: var(--ochre); color: var(--ink); }
+
+/* ---- Scrollbars (subtle, paper-toned) ---- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--paper-warm); }
+::-webkit-scrollbar-thumb { background: var(--ink-muted); border: 2px solid var(--paper-warm); }
