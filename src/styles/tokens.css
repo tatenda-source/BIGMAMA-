@@ -1,58 +1,136 @@
+/*
+ * BIGMAMA$ design tokens — "Civic Dossier"
+ *
+ * An archival-investigative palette. Warm cream paper, ink type, earthen
+ * accents drawn from the Zimbabwean landscape (ochre clay, dambo wetland,
+ * Harare kopje granite). No cyan, magenta, purple, pure black or pure white.
+ *
+ * Light mode is the primary aesthetic — paper receives the hand, ink is
+ * what remains. Dark mode inverts for night reading without losing the
+ * earthen character.
+ */
+
 :root {
-  --primary: #00f2ff;
-  --secondary: #7000ff;
-  --accent: #ff007a;
-  --background: #050505;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  /* ---- Ink & paper ---- */
+  --ink: #1a1815;
+  --ink-soft: #2d2925;
+  --ink-muted: #5c544a;
+  --paper: #f1ebe0;
+  --paper-warm: #e8dfce;
+  --paper-cool: #ece4d4;
 
-  /* Semantic accents used by primitives */
-  --color-accent-cyan: #00f2ff;
-  --color-accent-magenta: #ff007a;
-  --color-accent-purple: #7000ff;
-  --color-accent-green: #27d796;
-  --color-accent-amber: #ffb020;
-  --color-accent-red: #ff4d4d;
+  /* ---- Earthen accents ---- */
+  --ochre: #c4893a;          /* sun-baked clay — primary accent */
+  --ochre-deep: #9b6a24;
+  --ochre-soft: #e1bd80;
+  --dambo: #4a5d3a;          /* wetland green — success / verified */
+  --dambo-soft: #8ca373;
+  --baobab: #8b5a3c;         /* bark brown — secondary */
+  --stamp: #a32410;          /* oxidized crimson — danger / redaction */
+  --stamp-deep: #7a1a0a;
+  --granite: #6b6359;        /* Harare kopje grey — muted */
+  --sky: #3e5870;            /* faded midday sky — info */
 
-  /* Surface + text */
-  --color-surface-glass: rgba(255, 255, 255, 0.03);
-  --color-surface-raised: rgba(255, 255, 255, 0.05);
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-strong: rgba(255, 255, 255, 0.16);
-  --color-text: #f5f5f7;
-  --color-text-dim: #a0a0a0;
-  --color-text-muted: #6b6b73;
+  /* ---- Semantic aliases used by primitives ---- */
+  --color-text: var(--ink);
+  --color-text-dim: var(--ink-muted);
+  --color-text-muted: var(--granite);
+  --color-surface: var(--paper);
+  --color-surface-raised: var(--paper-warm);
+  --color-surface-glass: var(--paper-cool);
+  --color-border-hairline: var(--ink);
+  --color-border-subtle: rgba(26, 24, 21, 0.18);
+  --color-border-strong: rgba(26, 24, 21, 0.42);
 
-  /* Spacing scale (4px base) */
+  --color-accent: var(--ochre);
+  --color-accent-ink: var(--ochre-deep);
+  --color-accent-cyan: var(--sky);        /* legacy alias — remaps to sky */
+  --color-accent-magenta: var(--stamp);   /* legacy alias — remaps to stamp */
+  --color-accent-green: var(--dambo);
+  --color-accent-amber: var(--ochre);
+  --color-accent-red: var(--stamp);
+  --color-accent-purple: var(--baobab);   /* legacy alias — remaps to baobab */
+
+  /* ---- Typography ---- */
+  --font-display: 'Fraunces', 'Times New Roman', serif;
+  --font-main: 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --font-editorial: 'Fraunces', Georgia, serif;
+  /* legacy aliases */
+  --font-body: var(--font-main);
+
+  /* Fraunces axes for quick reference in component styles:
+   *   font-variation-settings: "opsz" 14, "SOFT" 50, "WONK" 0;
+   *   Headlines set opsz toward 144 for display-optical sizing.
+   *   Body copy stays near opsz 14.
+   */
+
+  --leading-tight: 1.15;
+  --leading-body: 1.65;
+  --leading-editorial: 1.45;
+
+  /* ---- Spatial rhythm (4 + 6 + 8 + 12 + 16 + 24 + 36 + 56) ---- */
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
+  --space-xl: 36px;
+  --space-2xl: 56px;
+  --space-3xl: 88px;
 
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* ---- Radii (keep TIGHT — this is paper, not glass) ---- */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
   --radius-pill: 999px;
 
-  /* Dynamic performance variables */
-  --glass-blur: 20px;
-  --transition-speed: 0.3s;
+  /* ---- Lines (paper wants hairlines, not glow) ---- */
+  --line-hair: 1px solid var(--ink);
+  --line-double: 3px double var(--ink);
+  --line-muted: 1px solid var(--color-border-subtle);
 
-  --grad-primary: linear-gradient(135deg, #00f2ff, #7000ff);
-  --grad-danger: linear-gradient(135deg, #ff007a, #7000ff);
+  /* ---- Performance / motion ---- */
+  --transition-speed: 0.22s;
+  --transition-timing: cubic-bezier(0.2, 0.7, 0.3, 1);
 
-  /* Focus ring (a11y) */
-  --focus-ring: 0 0 0 2px #050505, 0 0 0 4px var(--color-accent-cyan);
+  /* ---- Focus ring (ink underline-style — archival, not glow) ---- */
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+
+  /* ---- Gradients (use sparingly — for stamps and the ticker fade only) ---- */
+  --grad-paper-fade: linear-gradient(90deg, var(--paper) 0%, transparent 12%, transparent 88%, var(--paper) 100%);
+  --grad-ink-stamp: linear-gradient(180deg, var(--ink) 0%, var(--ink-soft) 100%);
+
+  /* ---- Legacy glass aliases (kept so old components don't crash during migration) ---- */
+  --background: var(--paper);
+  --glass-bg: var(--paper-warm);
+  --glass-border: var(--color-border-subtle);
+  --glass-blur: 0px;
+  --primary: var(--ochre);
+  --secondary: var(--baobab);
+  --accent: var(--stamp);
+  --grad-primary: linear-gradient(135deg, var(--ochre), var(--baobab));
+  --grad-danger: linear-gradient(135deg, var(--stamp), var(--stamp-deep));
 }
 
-[data-low-data="true"] {
-  --glass-blur: 0px;
+/* ---- Dark mode — invert paper/ink, preserve earthen accents ---- */
+:root[data-theme='dark'],
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ink: #f1ebe0;
+    --ink-soft: #e1d9c6;
+    --ink-muted: #a69b88;
+    --paper: #1a1714;
+    --paper-warm: #22201b;
+    --paper-cool: #1d1a16;
+    --granite: #8a8275;
+    --color-border-subtle: rgba(241, 235, 224, 0.16);
+    --color-border-strong: rgba(241, 235, 224, 0.42);
+    --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+  }
+}
+
+[data-low-data='true'] {
   --transition-speed: 0s;
 }
 
