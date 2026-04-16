@@ -13,6 +13,7 @@ export default defineConfig([
     'public/sw.js',
     'server/**',
     '**/.wrangler/**',
+    '.vercel/**',
     'node_modules',
   ]),
   {
@@ -60,6 +61,17 @@ export default defineConfig([
   },
   {
     files: ['scripts/**/*.{js,mjs}'],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
+    // Vercel serverless functions run in Node and use structured JSON logs
+    // as their intended telemetry surface — console.log is the signal.
+    files: ['api/**/*.js'],
     languageOptions: {
       globals: { ...globals.node },
     },
