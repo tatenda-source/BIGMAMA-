@@ -100,7 +100,7 @@ const Footer = () => {
           margin: '18px 0 0',
         }}
       >
-        Typeset &amp; engineered by{' '}
+        Engineered by{' '}
         <span
           style={{
             fontFamily: 'var(--font-mono)',
