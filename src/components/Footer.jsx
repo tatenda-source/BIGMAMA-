@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer
       style={{
-        padding: '32px 40px 36px',
+        padding: '32px 40px 28px',
         borderTop: '1px solid var(--ink)',
         marginTop: 0,
         display: 'grid',
@@ -84,6 +84,37 @@ const Footer = () => {
           Initiative No. 001
         </span>
       </div>
+
+      <p
+        style={{
+          gridColumn: '1 / -1',
+          marginTop: 18,
+          paddingTop: 14,
+          borderTop: '1px solid var(--color-border-subtle)',
+          fontFamily: 'var(--font-display)',
+          fontStyle: 'italic',
+          fontSize: 12,
+          letterSpacing: '0.04em',
+          color: 'var(--granite)',
+          textAlign: 'center',
+          margin: '18px 0 0',
+        }}
+      >
+        Typeset &amp; engineered by{' '}
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontStyle: 'normal',
+            fontWeight: 600,
+            letterSpacing: '0.28em',
+            textTransform: 'uppercase',
+            color: 'var(--ink)',
+            fontSize: 11,
+          }}
+        >
+          SMD Developers
+        </span>
+      </p>
     </footer>
   );
 };
