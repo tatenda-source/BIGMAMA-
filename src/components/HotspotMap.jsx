@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { Navigation, AlertTriangle, RefreshCw } from 'lucide-react';
 import { resolveHotspotProvider, ZIMBABWE_BBOX } from '../lib/hotspots.js';
 import 'leaflet/dist/leaflet.css';
 
 const INTENSITY_COLOR = {
-  high: 'var(--color-accent-magenta, #ff007a)',
-  medium: 'var(--color-accent-amber, #ffb020)',
-  low: 'var(--color-accent-cyan, #00f2ff)',
+  high: 'var(--stamp, #a32410)',
+  medium: 'var(--ochre-deep, #9b6a24)',
+  low: 'var(--sky, #3e5870)',
 };
 
 const CENTER = [(ZIMBABWE_BBOX.north + ZIMBABWE_BBOX.south) / 2, (ZIMBABWE_BBOX.east + ZIMBABWE_BBOX.west) / 2];
@@ -64,23 +64,68 @@ const HotspotMap = () => {
   }, [points]);
 
   return (
-    <div
-      className="glass-card"
-      style={{ overflow: 'hidden', border: '1px solid var(--color-border-subtle)' }}
+    <section
+      className="dossier"
+      style={{ padding: 0, overflow: 'hidden' }}
+      aria-labelledby="map-caption"
     >
-      <header style={{ padding: '24px 24px 16px', display: 'flex', gap: 16, alignItems: 'start', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+      <header
+        style={{
+          padding: '22px 24px 14px',
+          display: 'flex',
+          gap: 16,
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          borderBottom: '1px solid var(--ink)',
+          background: 'var(--paper-warm)',
+        }}
+      >
         <div>
-          <h3 className="font-display" style={{ display: 'flex', alignItems: 'center', gap: 8, margin: 0 }}>
-            <Navigation size={20} color="var(--color-accent-cyan)" aria-hidden="true" />
-            Live Hotspot Map
+          <p
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 10,
+              letterSpacing: '0.28em',
+              color: 'var(--granite)',
+              textTransform: 'uppercase',
+              margin: '0 0 6px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <Navigation size={12} aria-hidden="true" /> Plate I · Live hotspots
+          </p>
+          <h3
+            id="map-caption"
+            className="caption"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontVariationSettings: '"opsz" 144, "wght" 500',
+              fontSize: 'clamp(22px, 2.6vw, 30px)',
+              margin: 0,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Territorial incident register
           </h3>
-          <p style={{ color: 'var(--color-text-dim)', fontSize: 13, margin: '6px 0 0' }}>
-            Source: <strong style={{ color: 'var(--color-text)' }}>{provider.name.toUpperCase()}</strong>
+          <p
+            style={{
+              color: 'var(--ink-muted)',
+              fontSize: 12,
+              margin: '6px 0 0',
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.02em',
+            }}
+          >
+            Source{' '}
+            <strong style={{ color: 'var(--ink)' }}>{provider.name.toUpperCase()}</strong>
             {provider.reason ? (
-              <span style={{ color: 'var(--color-accent-amber)' }}> — {provider.reason}</span>
+              <span style={{ color: 'var(--ochre-deep)' }}> · {provider.reason}</span>
             ) : null}
             {status === 'ready' && (
-              <> · {points.length} active · {counts.high} high / {counts.medium} med / {counts.low} low</>
+              <> · {points.length} filed · {counts.high}H / {counts.medium}M / {counts.low}L</>
             )}
           </p>
         </div>
@@ -90,9 +135,9 @@ const HotspotMap = () => {
           disabled={status === 'loading'}
           aria-label="Refresh hotspots"
           className="bm-icon-button"
-          style={{ padding: 8 }}
+          style={{ padding: 8, border: '1.5px solid var(--ink)' }}
         >
-          <RefreshCw size={18} aria-hidden="true" className={status === 'loading' ? 'bm-spin' : undefined} />
+          <RefreshCw size={16} aria-hidden="true" className={status === 'loading' ? 'bm-spin' : undefined} />
         </button>
       </header>
 
@@ -100,12 +145,13 @@ const HotspotMap = () => {
         <MapContainer
           center={CENTER}
           zoom={6}
-          style={{ height: '100%', width: '100%', background: '#0a0a0a' }}
+          style={{ height: '100%', width: '100%', background: 'var(--paper-warm)' }}
           scrollWheelZoom={false}
+          zoomControl={false}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &middot; &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &middot; &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
           />
           <FitBounds points={points} />
           {points.map((p) => (
@@ -138,22 +184,37 @@ const HotspotMap = () => {
             role="alert"
             style={{
               position: 'absolute', inset: 0, display: 'grid', placeItems: 'center',
-              background: 'rgba(5,5,5,0.75)', backdropFilter: 'blur(6px)', color: 'var(--color-text)',
+              background: 'rgba(241, 235, 224, 0.92)', color: 'var(--ink)',
               textAlign: 'center', padding: 24,
             }}
           >
-            <div>
-              <AlertTriangle size={28} color="var(--color-accent-amber)" aria-hidden="true" />
-              <p style={{ marginTop: 12 }}>Couldn't load live hotspots.</p>
-              <p style={{ color: 'var(--color-text-dim)', fontSize: 12, marginTop: 4 }}>{error}</p>
+            <div style={{ maxWidth: 320 }}>
+              <AlertTriangle size={24} color="var(--stamp)" aria-hidden="true" />
+              <p
+                style={{
+                  marginTop: 10,
+                  fontFamily: 'var(--font-display)',
+                  fontVariationSettings: '"opsz" 72, "wght" 500',
+                  fontSize: 18,
+                }}
+              >
+                Couldn't load live hotspots.
+              </p>
+              <p
+                style={{
+                  color: 'var(--ink-muted)',
+                  fontSize: 12,
+                  marginTop: 4,
+                  fontFamily: 'var(--font-mono)',
+                }}
+              >
+                {error}
+              </p>
               <button
                 type="button"
                 onClick={() => setReloadCount((n) => n + 1)}
-                style={{
-                  marginTop: 16, padding: '8px 14px', borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--color-border-strong)', background: 'transparent',
-                  color: 'var(--color-text)', cursor: 'pointer',
-                }}
+                className="btn-secondary"
+                style={{ marginTop: 16 }}
               >
                 Try again
               </button>
@@ -161,7 +222,7 @@ const HotspotMap = () => {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
