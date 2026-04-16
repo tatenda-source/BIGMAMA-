@@ -114,7 +114,19 @@
 }
 
 /* ---- Dark mode — invert paper/ink, preserve earthen accents ---- */
-:root[data-theme='dark'],
+:root[data-theme='dark'] {
+  --ink: #f1ebe0;
+  --ink-soft: #e1d9c6;
+  --ink-muted: #a69b88;
+  --paper: #1a1714;
+  --paper-warm: #22201b;
+  --paper-cool: #1d1a16;
+  --granite: #8a8275;
+  --color-border-subtle: rgba(241, 235, 224, 0.16);
+  --color-border-strong: rgba(241, 235, 224, 0.42);
+  --focus-ring: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     --ink: #f1ebe0;

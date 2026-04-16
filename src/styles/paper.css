@@ -255,8 +255,10 @@
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-[data-low-data='true'] .ticker__track,
-@media (prefers-reduced-motion: reduce) { .ticker__track { animation: none; padding-left: 0; } }
+[data-low-data='true'] .ticker__track { animation: none; padding-left: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track { animation: none; padding-left: 0; }
+}
 
 /* ========================================================================
  * Typewriter reveal — used on first-paint headings. Controlled via
