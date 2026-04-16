@@ -1,23 +1,82 @@
-import React from 'react';
-import { User, Bell } from 'lucide-react';
+import { Bell } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import ActionButton from './ActionButton';
 
-const Header = ({ title, user }) => {
+function todayStamp() {
+  const d = new Date();
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  return `${String(d.getDate()).padStart(2, '0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+const Header = ({ title = 'Recent Filings', setShowReportModal, caseCount = 0 }) => {
   return (
-    <div style={{ padding: '24px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(5,5,5,0.5)', backdropFilter: 'blur(20px)' }}>
-       <h1 className="font-display" style={{ fontSize: '24px', fontWeight: 800 }}>{title}</h1>
-       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ position: 'relative', cursor: 'pointer' }}>
-             <Bell size={20} color="#a0a0a0" />
-             <div style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', background: '#ff007a', borderRadius: '50%', border: '2px solid #050505' }} />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '6px 16px', background: 'rgba(255,255,255,0.05)', borderRadius: '99px', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)' }}>
-             <div style={{ width: '24px', height: '24px', background: 'linear-gradient(45deg, #00f2ff, #7000ff)', borderRadius: '50%', display: 'grid', placeItems: 'center' }}>
-                <User size={14} color="white" />
-             </div>
-             <span style={{ fontSize: '14px', fontWeight: 600 }}>{user?.name || "Citizen #829"}</span>
-          </div>
-       </div>
-    </div>
+    <header
+      style={{
+        padding: '28px 40px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        gap: 24,
+        borderBottom: '1px solid var(--ink)',
+        background: 'var(--paper)',
+      }}
+    >
+      <div style={{ minWidth: 0 }}>
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 10,
+            letterSpacing: '0.28em',
+            color: 'var(--granite)',
+            textTransform: 'uppercase',
+            margin: '0 0 6px',
+          }}
+        >
+          Filed {todayStamp()} · Vol. 1 · No. {String(caseCount).padStart(4, '0')}
+        </p>
+        <h2
+          className="font-display"
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontVariationSettings: '"opsz" 144, "wght" 500, "SOFT" 20',
+            fontSize: 'clamp(34px, 5vw, 54px)',
+            lineHeight: 1.02,
+            letterSpacing: '-0.025em',
+            margin: 0,
+            color: 'var(--ink)',
+          }}
+        >
+          {title}
+        </h2>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+        <button
+          type="button"
+          aria-label="Notifications"
+          className="bm-icon-button"
+          style={{ position: 'relative' }}
+        >
+          <Bell size={18} aria-hidden="true" />
+          <span
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              top: 2,
+              right: 2,
+              width: 6,
+              height: 6,
+              background: 'var(--stamp)',
+              borderRadius: 1,
+              border: '1px solid var(--paper)',
+            }}
+          />
+        </button>
+        <ActionButton icon={AlertTriangle} onClick={() => setShowReportModal?.(true)}>
+          File report
+        </ActionButton>
+      </div>
+    </header>
   );
 };
 

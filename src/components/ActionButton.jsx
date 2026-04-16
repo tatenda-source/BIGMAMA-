@@ -1,47 +1,45 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 
-const ActionButton = ({ 
-  onClick, 
-  children, 
-  type = 'button', 
-  variant = 'primary', 
-  className, 
-  style, 
+/**
+ * Civic Dossier primary CTA. Paper-stamp feel: the button compresses into
+ * its own ochre drop-shadow on press. All hover/press treatment lives in
+ * .btn-primary (components.css) so this component just composes classes.
+ */
+const ActionButton = ({
+  onClick,
+  children,
+  type = 'button',
+  variant = 'primary',
+  className,
+  style,
   disabled,
-  icon: Icon
+  icon: Icon,
+  iconLeading = false,
+  ...rest
 }) => {
-  const isPrimary = variant === 'primary';
-  const isSecondary = variant === 'secondary';
-  const isDanger = variant === 'danger';
+  const variantClass =
+    variant === 'primary'
+      ? 'btn-primary'
+      : variant === 'danger'
+      ? 'btn-danger'
+      : 'btn-secondary';
 
   return (
     <motion.button
-      whileHover={{ scale: disabled ? 1 : 1.02 }}
-      whileTap={{ scale: disabled ? 1 : 0.98 }}
+      initial={false}
+      whileTap={disabled ? undefined : { y: 1 }}
+      transition={{ duration: 0.12, ease: [0.2, 0.7, 0.3, 1] }}
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={clsx(
-        "action-button",
-        isPrimary && "btn-primary",
-        isSecondary && "btn-secondary",
-        isDanger && "btn-danger",
-        className
-      )}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        opacity: disabled ? 0.6 : 1,
-        ...style
-      }}
+      className={clsx('action-button', variantClass, className)}
+      style={style}
+      {...rest}
     >
-      {children}
-      {Icon && <Icon size={18} />}
+      {Icon && iconLeading ? <Icon size={16} aria-hidden="true" /> : null}
+      <span>{children}</span>
+      {Icon && !iconLeading ? <Icon size={16} aria-hidden="true" /> : null}
     </motion.button>
   );
 };
