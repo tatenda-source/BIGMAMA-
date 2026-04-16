@@ -1,41 +1,48 @@
-/* primitives.css
- * Shared styles for the BIGMAMA$ primitives library.
- * All values are tokenized via CSS variables; if the token is not yet defined
- * in styles/tokens.css the fallback in var(--token, fallback) is used so the
- * primitives render correctly in isolation.
+/*
+ * Primitives — Civic Dossier edition.
+ *
+ * Every widget here is an archival artifact: paper-surfaced cards, rubber-
+ * stamp badges, a mechanical toggle, serif-numeric stats, ink-outlined
+ * icon seals, document-style buttons.
+ *
+ * Colors come from tokens.css. Fallbacks point at the paper palette so
+ * these render correctly even in isolated Storybook / test contexts.
  */
 
-/* ---------- CardItem ---------- */
+/* ---------- CardItem -> Dossier ---------- */
 .bm-card {
-  background: var(--color-surface-glass, rgba(255, 255, 255, 0.02));
-  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.05));
-  border-radius: var(--radius-md, 16px);
-  color: inherit;
+  position: relative;
+  background: var(--paper, #f1ebe0);
+  border: 1px solid var(--ink, #1a1815);
+  border-radius: var(--radius-sm, 2px);
+  color: var(--ink, #1a1815);
   box-sizing: border-box;
-  transition: border-color var(--transition-speed, 0.3s) ease,
-    background var(--transition-speed, 0.3s) ease;
+  transition:
+    transform var(--transition-speed, 0.22s) var(--transition-timing, ease),
+    box-shadow var(--transition-speed, 0.22s) var(--transition-timing, ease);
 }
 
-.bm-card--pad-sm { padding: 12px; }
+.bm-card--pad-sm { padding: 14px; }
 .bm-card--pad-md { padding: 20px; }
 .bm-card--pad-lg { padding: 28px; }
 .bm-card--pad-none { padding: 0; }
 
 .bm-card--interactive { cursor: pointer; }
 .bm-card--interactive:hover {
-  border-color: var(--color-border-hover, rgba(255, 255, 255, 0.12));
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink, #1a1815);
 }
 .bm-card--interactive:focus-visible {
-  outline: 2px solid var(--color-accent-cyan, #00f2ff);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper, #f1ebe0), 0 0 0 4px var(--ink, #1a1815);
 }
 
 .bm-card--accent {
-  background: color-mix(in srgb, var(--bm-accent) 8%, transparent);
-  border-color: color-mix(in srgb, var(--bm-accent) 25%, transparent);
+  border-color: var(--bm-accent, var(--ochre-deep, #9b6a24));
+  box-shadow: 3px 3px 0 var(--bm-accent, var(--ochre, #c4893a));
 }
 
-/* ---------- Toggle ---------- */
+/* ---------- Toggle -> Mechanical switch ---------- */
 .bm-toggle-row {
   display: flex;
   justify-content: space-between;
@@ -44,193 +51,213 @@
   width: 100%;
 }
 
-.bm-toggle-meta {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  min-width: 0;
-}
+.bm-toggle-meta { display: flex; gap: 12px; align-items: center; min-width: 0; }
 
 .bm-toggle-label {
-  font-size: 14px;
+  font-family: var(--font-display, Fraunces), serif;
+  font-size: 16px;
   font-weight: 600;
   margin: 0;
+  color: var(--ink);
 }
 .bm-toggle-description {
   font-size: 12px;
-  color: var(--color-text-dim, #a0a0a0);
+  color: var(--granite, #6b6359);
   margin: 2px 0 0;
+  font-style: italic;
 }
 
+/* A small rectangular ink switch with a crisp throw — feels mechanical. */
 .bm-toggle-switch {
-  --bm-toggle-w: 50px;
-  --bm-toggle-h: 26px;
-  --bm-toggle-knob: 20px;
+  --bm-toggle-w: 52px;
+  --bm-toggle-h: 22px;
+  --bm-toggle-knob: 18px;
   position: relative;
   width: var(--bm-toggle-w);
   height: var(--bm-toggle-h);
-  border-radius: calc(var(--bm-toggle-h) / 2);
-  border: none;
+  border-radius: var(--radius-sm, 2px);
+  border: 1.5px solid var(--ink, #1a1815);
   padding: 0;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.15);
-  transition: background var(--transition-speed, 0.3s) ease;
+  background: var(--paper, #f1ebe0);
+  transition: background var(--transition-speed, 0.22s) var(--transition-timing, ease);
   flex-shrink: 0;
 }
 .bm-toggle-switch--sm {
-  --bm-toggle-w: 40px;
-  --bm-toggle-h: 20px;
+  --bm-toggle-w: 42px;
+  --bm-toggle-h: 18px;
   --bm-toggle-knob: 14px;
 }
 .bm-toggle-switch[aria-checked="true"] {
-  background: var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+  background: var(--bm-accent, var(--ink, #1a1815));
 }
 .bm-toggle-switch:focus-visible {
-  outline: 2px solid var(--bm-accent, var(--color-accent-cyan, #00f2ff));
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper, #f1ebe0), 0 0 0 4px var(--ink, #1a1815);
 }
-.bm-toggle-switch:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.bm-toggle-switch:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .bm-toggle-knob {
   position: absolute;
   top: 50%;
-  left: 3px;
+  left: 1px;
   transform: translateY(-50%);
   width: var(--bm-toggle-knob);
   height: var(--bm-toggle-knob);
-  border-radius: 50%;
-  background: #fff;
-  transition: left var(--transition-speed, 0.3s) ease;
+  border-radius: 1px;
+  background: var(--ink, #1a1815);
+  transition: left var(--transition-speed, 0.22s) cubic-bezier(0.85, 0, 0.15, 1);
   pointer-events: none;
 }
 .bm-toggle-switch[aria-checked="true"] .bm-toggle-knob {
   left: calc(var(--bm-toggle-w) - var(--bm-toggle-knob) - 3px);
+  background: var(--paper, #f1ebe0);
 }
 
-/* ---------- StatDisplay ---------- */
+/* ---------- StatDisplay -> Serif numeric ---------- */
 .bm-stat {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
   min-width: 0;
 }
 .bm-stat__label {
-  font-size: 12px;
-  color: var(--color-text-dim, #a0a0a0);
+  font-family: var(--font-mono, JetBrains Mono), monospace;
+  font-size: 10px;
+  color: var(--granite, #6b6359);
   margin: 0;
-  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 .bm-stat__value-row {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
   justify-content: space-between;
   gap: 12px;
 }
 .bm-stat__value {
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--bm-accent, inherit);
-}
-.bm-stat__value--sm { font-size: 20px; }
-.bm-stat__value--lg { font-size: 36px; }
-.bm-stat__subtext {
-  font-size: 11px;
-  color: var(--color-text-dim, #a0a0a0);
+  font-family: var(--font-display, Fraunces), serif;
+  font-variation-settings: 'opsz' 144, 'wght' 500, 'SOFT' 50;
+  font-size: 44px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--bm-accent, var(--ink, #1a1815));
   margin: 0;
 }
-.bm-stat__trend {
+.bm-stat__value--sm { font-size: 26px; }
+.bm-stat__value--lg { font-size: 58px; }
+.bm-stat__subtext {
   font-size: 12px;
+  color: var(--granite, #6b6359);
+  margin: 2px 0 0;
+  font-style: italic;
+}
+.bm-stat__trend {
+  font-family: var(--font-mono, JetBrains Mono), monospace;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--bm-accent, var(--color-accent-green, #22e584));
+  letter-spacing: 0.08em;
+  color: var(--bm-accent, var(--dambo, #4a5d3a));
+  text-transform: uppercase;
 }
 
-/* ---------- Badge ---------- */
+/* ---------- Badge -> Stamp ---------- */
 .bm-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  gap: 6px;
+  font-family: var(--font-mono, JetBrains Mono), monospace;
+  font-size: 10px;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm, 2px);
   line-height: 1.6;
-  border: 1px solid transparent;
+  border: 1.5px solid var(--bm-accent, var(--ink, #1a1815));
   white-space: nowrap;
-  background: color-mix(in srgb, var(--bm-accent, var(--color-accent-cyan, #00f2ff)) 15%, transparent);
-  color: var(--bm-accent, var(--color-accent-cyan, #00f2ff));
+  background: transparent;
+  color: var(--bm-accent, var(--ink, #1a1815));
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  transform: rotate(-1deg);
+  transform-origin: center;
+  transition: transform var(--transition-speed, 0.22s) var(--transition-timing, ease);
 }
+.bm-badge:hover { transform: rotate(0.4deg); }
 .bm-badge--solid {
-  background: var(--bm-accent, var(--color-accent-cyan, #00f2ff));
-  color: #050505;
+  background: var(--bm-accent, var(--ink, #1a1815));
+  color: var(--paper, #f1ebe0);
 }
 .bm-badge--outline {
   background: transparent;
-  border-color: color-mix(in srgb, var(--bm-accent, var(--color-accent-cyan, #00f2ff)) 45%, transparent);
+  border-color: var(--bm-accent, var(--ink, #1a1815));
 }
 
-/* ---------- IconAvatar ---------- */
+/* ---------- IconAvatar -> Ink seal ---------- */
 .bm-avatar {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--bm-accent, rgba(255, 255, 255, 0.12)) 12%, transparent);
-  color: var(--bm-accent, var(--color-text-dim, #a0a0a0));
-  border: 1px solid transparent;
+  border-radius: var(--radius-sm, 2px);
+  background: transparent;
+  color: var(--bm-accent, var(--ink, #1a1815));
+  border: 1.5px solid var(--bm-accent, var(--ink, #1a1815));
+  box-shadow: 2px 2px 0 var(--paper-warm, #e8dfce);
 }
 .bm-avatar--ring {
-  border-color: color-mix(in srgb, var(--bm-accent) 30%, transparent);
+  border-width: 2px;
 }
 .bm-avatar--muted {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--color-text-dim, #a0a0a0);
+  background: var(--paper-warm, #e8dfce);
+  color: var(--granite, #6b6359);
+  border-color: var(--granite, #6b6359);
+  box-shadow: none;
 }
 
-/* ---------- SecondaryButton ---------- */
+/* ---------- SecondaryButton -> Document ghost button ---------- */
 .bm-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 9px 16px;
+  font-family: var(--font-main, 'Public Sans'), sans-serif;
   font-size: 13px;
   font-weight: 600;
-  border-radius: var(--radius-md, 10px);
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-sm, 2px);
   background: transparent;
-  color: var(--bm-accent, var(--color-text-dim, #e6e6e6));
-  border: 1px solid
-    color-mix(in srgb, var(--bm-accent, var(--color-border-subtle, rgba(255, 255, 255, 0.12))) 50%, transparent);
+  color: var(--bm-accent, var(--ink, #1a1815));
+  border: 1.5px solid var(--bm-accent, var(--ink, #1a1815));
   cursor: pointer;
-  transition: background var(--transition-speed, 0.3s) ease,
-    border-color var(--transition-speed, 0.3s) ease,
-    color var(--transition-speed, 0.3s) ease;
-  font-family: inherit;
+  transition:
+    background var(--transition-speed, 0.22s) var(--transition-timing, ease),
+    color var(--transition-speed, 0.22s) var(--transition-timing, ease),
+    transform var(--transition-speed, 0.22s) var(--transition-timing, ease);
 }
 .bm-btn-secondary:hover {
-  background: color-mix(in srgb, var(--bm-accent, #ffffff) 8%, transparent);
+  background: var(--bm-accent, var(--ink, #1a1815));
+  color: var(--paper, #f1ebe0);
+  transform: translate(-1px, -1px);
 }
 .bm-btn-secondary:focus-visible {
-  outline: 2px solid var(--bm-accent, var(--color-accent-cyan, #00f2ff));
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper, #f1ebe0), 0 0 0 4px var(--ink, #1a1815);
 }
-.bm-btn-secondary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.bm-btn-secondary--sm { padding: 6px 10px; font-size: 12px; }
-.bm-btn-secondary--lg { padding: 10px 18px; font-size: 14px; }
+.bm-btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+.bm-btn-secondary--sm { padding: 6px 12px; font-size: 12px; }
+.bm-btn-secondary--lg { padding: 12px 20px; font-size: 14px; }
 
-/* ---------- CardHeader ---------- */
+/* ---------- CardHeader -> Section caption ---------- */
 .bm-card-header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ink, #1a1815);
 }
 .bm-card-header__titles {
   display: flex;
@@ -239,14 +266,21 @@
   min-width: 0;
 }
 .bm-card-header__title {
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--font-display, Fraunces), serif;
+  font-variation-settings: 'opsz' 72, 'wght' 500;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--ink);
   margin: 0;
 }
 .bm-card-header__subtitle {
-  font-size: 12px;
-  color: var(--color-text-dim, #a0a0a0);
-  margin: 0;
+  font-family: var(--font-mono, JetBrains Mono), monospace;
+  font-size: 10px;
+  color: var(--granite, #6b6359);
+  margin: 2px 0 0;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 .bm-card-header__actions {
   display: flex;
@@ -256,27 +290,26 @@
 }
 .bm-card-header__action-btn {
   background: transparent;
-  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
-  color: var(--color-text-dim, #a0a0a0);
+  border: 1.5px solid var(--ink, #1a1815);
+  color: var(--ink, #1a1815);
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm, 2px);
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: background var(--transition-speed, 0.3s) ease,
-    color var(--transition-speed, 0.3s) ease;
+  transition: background var(--transition-speed, 0.22s) ease, color var(--transition-speed, 0.22s) ease;
 }
 .bm-card-header__action-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
+  background: var(--ink, #1a1815);
+  color: var(--paper, #f1ebe0);
 }
 .bm-card-header__action-btn:focus-visible {
-  outline: 2px solid var(--color-accent-cyan, #00f2ff);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper, #f1ebe0), 0 0 0 4px var(--ink, #1a1815);
 }
 
-/* ---------- FormSection ---------- */
+/* ---------- FormSection -> Archival field ---------- */
 .bm-form-section {
   display: flex;
   flex-direction: column;
@@ -290,35 +323,45 @@
   gap: 8px;
 }
 .bm-form-section__label {
-  font-size: 13px;
+  font-family: var(--font-mono, JetBrains Mono), monospace;
+  font-size: 10px;
   font-weight: 600;
-  color: inherit;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--granite, #6b6359);
 }
 .bm-form-section__required {
-  color: var(--color-accent-magenta, #ff007a);
+  color: var(--stamp, #a32410);
   margin-left: 2px;
 }
 .bm-form-section__hint {
   font-size: 11px;
-  color: var(--color-text-dim, #a0a0a0);
+  color: var(--granite, #6b6359);
+  font-style: italic;
   margin: 0;
 }
 .bm-form-section__error {
-  font-size: 12px;
-  color: var(--color-accent-magenta, #ff007a);
+  font-family: var(--font-mono, JetBrains Mono), monospace;
+  font-size: 11px;
+  color: var(--stamp, #a32410);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   margin: 0;
 }
 .bm-form-section--error .bm-form-section__label {
-  color: var(--color-accent-magenta, #ff007a);
+  color: var(--stamp, #a32410);
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   .bm-card,
+  .bm-card--interactive,
   .bm-toggle-switch,
   .bm-toggle-knob,
   .bm-btn-secondary,
-  .bm-card-header__action-btn {
+  .bm-card-header__action-btn,
+  .bm-badge {
     transition: none !important;
+    transform: none !important;
   }
 }
